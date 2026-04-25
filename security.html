@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Security & Privacy — Klipr</title>
+<meta name="description" content="Exactly what access Klipr requests, where your credentials are stored, and how to revoke access instantly." />
+<link rel="icon" type="image/png" href="kliprlogo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+        --bg: #0a0a0f; --bg-card: #14141c; --bg-elevated: #111118;
+        --border: rgba(255,255,255,0.06); --border-strong: rgba(255,255,255,0.12);
+        --text: #f4f4f7; --text-muted: #9898a6; --text-dim: #62626e;
+        --purple: #a855f7; --pink: #ec4899; --green: #22c55e;
+        --gradient: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+    .ambient-bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .ambient-bg::before { content: ''; position: absolute; border-radius: 50%; filter: blur(140px); width: 500px; height: 500px; background: var(--purple); top: -200px; left: -100px; opacity: 0.2; }
+    .container { max-width: 860px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 2; }
+
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 16px 0; backdrop-filter: blur(20px); background: rgba(10,10,15,0.8); border-bottom: 1px solid var(--border); }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+    .logo { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 800; letter-spacing: -0.03em; color: var(--text); text-decoration: none; }
+    .logo img { width: 32px; height: 32px; border-radius: 7px; box-shadow: 0 4px 12px rgba(168,85,247,0.4); }
+    .logo span { background: var(--gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+    .nav-back { font-size: 13px; color: var(--text-muted); text-decoration: none; display: flex; align-items: center; gap: 6px; transition: color 0.2s; }
+    .nav-back:hover { color: var(--text); }
+
+    .page-wrap { padding: 120px 0 100px; }
+    .page-header { margin-bottom: 56px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+    .page-eyebrow { display: inline-block; font-size: 12px; font-weight: 500; color: var(--purple); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 16px; }
+    .page-header h1 { font-size: clamp(32px, 5vw, 48px); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 16px; }
+    .page-header p { font-size: 18px; color: var(--text-muted); max-width: 600px; line-height: 1.6; }
+
+    /* Answer cards */
+    .answer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 64px; }
+    .answer-card {
+        background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px;
+        padding: 28px; position: relative; overflow: hidden;
+    }
+    .answer-card::before { content: ''; position: absolute; top: 0; right: 0; width: 120px; height: 120px; background: radial-gradient(circle, rgba(168,85,247,0.06), transparent 70%); pointer-events: none; }
+    .answer-card.full { grid-column: span 2; }
+    .answer-icon { font-size: 28px; margin-bottom: 16px; }
+    .answer-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; color: var(--text); }
+    .answer-card p { font-size: 14px; color: var(--text-muted); line-height: 1.65; margin-bottom: 0; }
+    .answer-card .big-answer { font-size: 22px; font-weight: 800; color: var(--green); margin-bottom: 8px; letter-spacing: -0.01em; }
+    .answer-card .big-answer.purple { color: var(--purple); }
+
+    /* Section headers */
+    .section-label { font-size: 12px; font-weight: 600; color: var(--purple); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 20px; font-family: 'JetBrains Mono', monospace; }
+
+    /* OAuth scopes table */
+    .scope-table { width: 100%; border-collapse: collapse; margin-bottom: 32px; }
+    .scope-table th { text-align: left; padding: 10px 16px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: var(--text-muted); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+    .scope-table td { padding: 14px 16px; border: 1px solid var(--border); font-size: 14px; vertical-align: top; }
+    .scope-table td:first-child { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--purple); background: rgba(168,85,247,0.04); white-space: nowrap; }
+    .scope-table td:nth-child(2) { color: var(--text); }
+    .scope-table td:nth-child(3) { color: var(--text-muted); }
+    .scope-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .scope-table tr:hover td:first-child { background: rgba(168,85,247,0.08); }
+
+    /* File list */
+    .file-list { list-style: none; padding: 0; margin-bottom: 32px; }
+    .file-item { display: flex; align-items: flex-start; gap: 16px; padding: 16px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 8px; }
+    .file-item:hover { border-color: var(--border-strong); }
+    .file-name { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--purple); margin-bottom: 4px; }
+    .file-desc { font-size: 13px; color: var(--text-muted); }
+    .file-local { font-size: 11px; font-weight: 600; color: var(--green); background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.2); padding: 2px 8px; border-radius: 100px; white-space: nowrap; margin-top: 2px; display: inline-block; }
+
+    /* Revoke steps */
+    .revoke-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px; }
+    .revoke-step { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; text-align: center; }
+    .revoke-step .step-num { width: 36px; height: 36px; background: rgba(168,85,247,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; color: var(--purple); margin: 0 auto 12px; }
+    .revoke-step p { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+    .revoke-step a { color: var(--purple); text-decoration: none; }
+    .revoke-step a:hover { text-decoration: underline; }
+
+    /* What we can't do */
+    .cant-list { list-style: none; padding: 0; margin-bottom: 48px; }
+    .cant-item { display: flex; align-items: flex-start; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--border); font-size: 15px; color: var(--text-muted); }
+    .cant-item:last-child { border-bottom: none; }
+    .cant-item::before { content: '✗'; color: #ef4444; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+
+    /* Green highlight */
+    .green-box { background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 12px; padding: 24px 28px; margin-bottom: 32px; }
+    .green-box p { color: var(--text); font-size: 15px; margin: 0; }
+
+    /* Divider */
+    .divider { height: 1px; background: var(--border); margin: 56px 0; }
+
+    footer { padding: 40px 0 60px; border-top: 1px solid var(--border); }
+    .footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+    .footer-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text); font-weight: 700; }
+    .footer-logo img { width: 26px; height: 26px; border-radius: 6px; }
+    .footer-copy { font-size: 13px; color: var(--text-dim); }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a { font-size: 13px; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--text); }
+
+    @media (max-width: 700px) {
+        .answer-grid { grid-template-columns: 1fr; }
+        .answer-card.full { grid-column: span 1; }
+        .revoke-steps { grid-template-columns: 1fr; }
+        .scope-table { font-size: 12px; }
+    }
+</style>
+</head>
+<body>
+<div class="ambient-bg"></div>
+
+<nav>
+    <div class="nav-inner">
+        <a href="index.html" class="logo">
+            <img src="kliprlogo.png" alt="Klipr" />
+            <span>klipr</span>
+        </a>
+        <a href="index.html" class="nav-back">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+            Back to home
+        </a>
+    </div>
+</nav>
+
+<div class="page-wrap">
+    <div class="container">
+
+        <div class="page-header">
+            <div class="page-eyebrow">Security</div>
+            <h1>Exactly what Klipr can<br/>and cannot do to your accounts.</h1>
+            <p>You're giving a background app access to your YouTube and TikTok. You deserve a straight answer on what that means — not buried in a privacy policy.</p>
+        </div>
+
+        <!-- Quick answer cards -->
+        <div class="section-label">The short answers</div>
+        <div class="answer-grid">
+            <div class="answer-card">
+                <div class="answer-icon">🔐</div>
+                <div class="big-answer">Never.</div>
+                <h3>Are your credentials sent to Klipr's servers?</h3>
+                <p>Your YouTube OAuth token, TikTok token, and all API keys are stored exclusively in files on your own PC. Klipr has no server that receives or stores them. We literally cannot see them.</p>
+            </div>
+            <div class="answer-card">
+                <div class="answer-icon">📁</div>
+                <div class="big-answer">Your PC only.</div>
+                <h3>Where are your tokens stored?</h3>
+                <p>In your Klipr installation folder — typically <span style="font-family:monospace;font-size:12px;color:var(--purple);">%localappdata%\Klipr\</span>. The files never leave your machine unless you move them yourself.</p>
+            </div>
+            <div class="answer-card">
+                <div class="answer-icon">⚡</div>
+                <div class="big-answer">30 seconds.</div>
+                <h3>How fast can you revoke access?</h3>
+                <p>Visit Google's permissions page, find Klipr, click Remove. Your YouTube access is gone instantly. Or just delete token.json from the install folder. Either works immediately.</p>
+            </div>
+            <div class="answer-card">
+                <div class="answer-icon">🛑</div>
+                <div class="big-answer purple">Upload only.</div>
+                <h3>What can Klipr actually do to your YouTube?</h3>
+                <p>Upload videos and read basic video statistics (views, likes) on videos Klipr uploaded. That's the full extent. It cannot delete videos, access your revenue data, or read your private content.</p>
+            </div>
+            <div class="answer-card full">
+                <div class="answer-icon">💀</div>
+                <div class="big-answer">Nothing breaks.</div>
+                <h3>What happens if Klipr shuts down?</h3>
+                <p>Your YouTube and TikTok accounts continue working exactly as they did before. Klipr has no server component your accounts depend on — it's a local app. If we shut down tomorrow, you revoke OAuth access, uninstall, and your channels are completely unaffected. Your videos stay up. Your subscribers stay. Nothing is tied to our infrastructure.</p>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- OAuth scopes -->
+        <div class="section-label">YouTube OAuth — exact permissions requested</div>
+        <p style="color:var(--text-muted);font-size:15px;margin-bottom:24px;">When you connect your YouTube account, Google shows you a consent screen listing exactly what Klipr is asking for. Here's what each scope means in plain English:</p>
+
+        <table class="scope-table">
+            <thead>
+                <tr>
+                    <th>Scope</th>
+                    <th>What it allows</th>
+                    <th>Why Klipr needs it</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>youtube.upload</td>
+                    <td>Upload videos to your channel</td>
+                    <td>To post clips to YouTube Shorts on your behalf</td>
+                </tr>
+                <tr>
+                    <td>youtube.readonly</td>
+                    <td>Read video statistics (views, likes) on videos you own</td>
+                    <td>To fetch view counts after 48 hours for the analytics dashboard and learning system</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="green-box">
+            <p>✓ &nbsp;Klipr does <strong>not</strong> request access to delete videos, manage playlists, read your revenue or monetization data, access your subscribers list, read your private videos, or manage your channel settings. If a future version ever needs additional scopes, you will be prompted to re-authorize and can review exactly what changed.</p>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Files on your PC -->
+        <div class="section-label">Files stored on your PC</div>
+        <p style="color:var(--text-muted);font-size:15px;margin-bottom:24px;">Every file Klipr creates lives in your installation directory. Here's exactly what each one contains:</p>
+
+        <ul class="file-list">
+            <li class="file-item">
+                <div style="flex:1">
+                    <div class="file-name">token.json</div>
+                    <div class="file-desc">Your YouTube OAuth access token. This is what authorizes Klipr to upload to YouTube. Delete this file at any time to immediately disconnect YouTube — Klipr will prompt you to reconnect next launch.</div>
+                </div>
+                <div><span class="file-local">Local only</span></div>
+            </li>
+            <li class="file-item">
+                <div style="flex:1">
+                    <div class="file-name">tiktok_token.json</div>
+                    <div class="file-desc">Your TikTok access token. Same principle — delete it to disconnect TikTok immediately.</div>
+                </div>
+                <div><span class="file-local">Local only</span></div>
+            </li>
+            <li class="file-item">
+                <div style="flex:1">
+                    <div class="file-name">config.py</div>
+                    <div class="file-desc">Your settings — streamer list, thresholds, upload preferences. No credentials stored here, only configuration values.</div>
+                </div>
+                <div><span class="file-local">Local only</span></div>
+            </li>
+            <li class="file-item">
+                <div style="flex:1">
+                    <div class="file-name">upload_history.json</div>
+                    <div class="file-desc">A local log of every clip Klipr has uploaded — title, timestamp, YouTube URL, view count. Stored for your analytics dashboard. Never transmitted anywhere.</div>
+                </div>
+                <div><span class="file-local">Local only</span></div>
+            </li>
+            <li class="file-item">
+                <div style="flex:1">
+                    <div class="file-name">clips/</div>
+                    <div class="file-desc">The actual video files — raw clips and processed vertical versions. Stored on your hard drive until you delete them. Never uploaded anywhere except to YouTube/TikTok when you explicitly enable auto-upload.</div>
+                </div>
+                <div><span class="file-local">Local only</span></div>
+            </li>
+            <li class="file-item">
+                <div style="flex:1">
+                    <div class="file-name">klipr.lic</div>
+                    <div class="file-desc">Your license key, cached after first activation. Only your license key is stored here — no personal data.</div>
+                </div>
+                <div><span class="file-local">Local only</span></div>
+            </li>
+        </ul>
+
+        <div class="divider"></div>
+
+        <!-- What Klipr cannot do -->
+        <div class="section-label">What Klipr cannot do to your accounts</div>
+        <ul class="cant-list">
+            <li class="cant-item">Delete or edit any of your existing YouTube videos</li>
+            <li class="cant-item">Access your YouTube revenue, AdSense, or monetization data</li>
+            <li class="cant-item">Read your subscriber list or any private channel data</li>
+            <li class="cant-item">Access your YouTube Studio settings or channel configuration</li>
+            <li class="cant-item">Post to YouTube on your behalf without the app running on your PC</li>
+            <li class="cant-item">Access any TikTok data beyond uploading videos</li>
+            <li class="cant-item">Read your Kick or Twitch account credentials — it only monitors public stream chat</li>
+            <li class="cant-item">Transmit your clips or recordings to any Klipr server — they stay on your PC</li>
+        </ul>
+
+        <div class="divider"></div>
+
+        <!-- How to revoke -->
+        <div class="section-label">How to revoke access — takes 30 seconds</div>
+
+        <p style="color:var(--text-muted);font-size:15px;margin-bottom:24px;"><strong style="color:var(--text);">YouTube:</strong> Two options — either through Google's account permissions page, or by deleting the local token file.</p>
+
+        <div class="revoke-steps" style="margin-bottom:32px;">
+            <div class="revoke-step">
+                <div class="step-num">1</div>
+                <p>Visit <a href="https://myaccount.google.com/permissions" target="_blank">myaccount.google.com/permissions</a></p>
+            </div>
+            <div class="revoke-step">
+                <div class="step-num">2</div>
+                <p>Find <strong>Klipr</strong> in the list of connected apps</p>
+            </div>
+            <div class="revoke-step">
+                <div class="step-num">3</div>
+                <p>Click <strong>Remove Access</strong> — done instantly</p>
+            </div>
+        </div>
+
+        <p style="color:var(--text-muted);font-size:14px;margin-bottom:48px;">Or simply delete <span style="font-family:monospace;font-size:12px;color:var(--purple);">token.json</span> from your Klipr installation folder. The effect is immediate — Klipr loses all YouTube access on next launch and will prompt you to reconnect if you want to restore it.</p>
+
+        <p style="color:var(--text-muted);font-size:15px;margin-bottom:24px;"><strong style="color:var(--text);">TikTok:</strong> Delete <span style="font-family:monospace;font-size:12px;color:var(--purple);">tiktok_token.json</span> from your installation folder, or revoke access through TikTok's app settings under <strong>Settings → Security → Connected Apps</strong>.</p>
+
+        <div class="divider"></div>
+
+        <!-- What does leave your PC -->
+        <div class="section-label">The only data that leaves your PC</div>
+        <div class="answer-grid" style="margin-bottom:0;">
+            <div class="answer-card">
+                <div class="answer-icon">📤</div>
+                <h3>Video uploads</h3>
+                <p>When auto-upload is enabled, clip files are sent directly to YouTube or TikTok via their official APIs. This goes straight from your PC to the platform — not through any Klipr server.</p>
+            </div>
+            <div class="answer-card">
+                <div class="answer-icon">🤖</div>
+                <h3>Clip transcripts (headline generation)</h3>
+                <p>When AI headlines are enabled, the text transcript of a clip is sent to Groq's API to generate a title. This is plain text — no video, no audio, no personal data. Groq's privacy policy governs their handling.</p>
+            </div>
+            <div class="answer-card">
+                <div class="answer-icon">🔑</div>
+                <h3>License key verification</h3>
+                <p>On each launch, your license key is sent to our licensing provider to confirm it's valid. Only the key itself is transmitted — no personal data, no account info, no usage data.</p>
+            </div>
+            <div class="answer-card">
+                <div class="answer-icon">📊</div>
+                <h3>View count fetching</h3>
+                <p>48 hours after upload, Klipr queries the YouTube API to fetch view and like counts for clips it uploaded. This is a read request using your OAuth token — no data is sent out, only statistics are received back.</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<footer>
+    <div class="container footer-inner">
+        <a href="index.html" class="footer-logo">
+            <img src="kliprlogo.png" alt="Klipr" />
+            klipr
+        </a>
+        <div class="footer-copy">© 2026 Klipr. All rights reserved.</div>
+        <div class="footer-links">
+            <a href="terms.html">Terms</a>
+            <a href="privacy.html">Privacy</a>
+            <a href="security.html">Security</a>
+            <a href="mailto:support@klipr.app">Contact</a>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

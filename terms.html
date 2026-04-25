@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Terms of Service — Klipr</title>
+<meta name="description" content="Klipr Terms of Service — the legal agreement between you and Klipr." />
+<link rel="icon" type="image/png" href="kliprlogo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+        --bg: #0a0a0f; --bg-card: #14141c; --border: rgba(255,255,255,0.06);
+        --border-strong: rgba(255,255,255,0.12); --text: #f4f4f7;
+        --text-muted: #9898a6; --text-dim: #62626e;
+        --purple: #a855f7; --pink: #ec4899;
+        --gradient: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background: var(--bg); color: var(--text); line-height: 1.7;
+        -webkit-font-smoothing: antialiased; overflow-x: hidden;
+    }
+    .ambient-bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .ambient-bg::before {
+        content: ''; position: absolute; border-radius: 50%; filter: blur(140px);
+        width: 500px; height: 500px; background: var(--purple);
+        top: -200px; left: -100px; opacity: 0.2;
+    }
+    .container { max-width: 800px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 2; }
+
+    nav {
+        position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+        padding: 16px 0; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+        background: rgba(10,10,15,0.8); border-bottom: 1px solid var(--border);
+    }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+    .logo { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 800; letter-spacing: -0.03em; color: var(--text); text-decoration: none; }
+    .logo img { width: 32px; height: 32px; border-radius: 7px; box-shadow: 0 4px 12px rgba(168,85,247,0.4); }
+    .logo span { background: var(--gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+    .nav-back { font-size: 13px; color: var(--text-muted); text-decoration: none; display: flex; align-items: center; gap: 6px; transition: color 0.2s; }
+    .nav-back:hover { color: var(--text); }
+
+    .page-wrap { padding: 120px 0 100px; }
+    .page-header { margin-bottom: 56px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+    .page-eyebrow { display: inline-block; font-size: 12px; font-weight: 500; color: var(--purple); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 16px; }
+    .page-header h1 { font-size: clamp(32px, 5vw, 48px); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 12px; }
+    .page-header .updated { font-size: 13px; color: var(--text-dim); }
+
+    .policy-section { margin-bottom: 48px; }
+    .policy-section h2 {
+        font-size: 20px; font-weight: 700; letter-spacing: -0.01em;
+        margin-bottom: 16px; color: var(--text);
+        display: flex; align-items: center; gap: 10px;
+    }
+    .policy-section h2::before {
+        content: ''; display: block; width: 3px; height: 20px;
+        background: var(--gradient); border-radius: 2px; flex-shrink: 0;
+    }
+    .policy-section h3 { font-size: 16px; font-weight: 600; color: var(--text); margin: 24px 0 10px; }
+    .policy-section p { color: var(--text-muted); font-size: 15px; margin-bottom: 14px; line-height: 1.75; }
+    .policy-section ul, .policy-section ol { color: var(--text-muted); font-size: 15px; padding-left: 20px; margin-bottom: 14px; }
+    .policy-section li { margin-bottom: 8px; line-height: 1.7; }
+    .policy-section a { color: var(--purple); text-decoration: none; }
+    .policy-section a:hover { text-decoration: underline; }
+    code { background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+
+    .highlight-box {
+        background: rgba(168,85,247,0.06); border: 1px solid rgba(168,85,247,0.2);
+        border-radius: 10px; padding: 20px 24px; margin-bottom: 20px;
+    }
+    .highlight-box p { margin-bottom: 0; color: var(--text); }
+
+    .warning-box {
+        background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.2);
+        border-radius: 10px; padding: 20px 24px; margin-bottom: 20px;
+    }
+    .warning-box p { margin-bottom: 0; color: #fca5a5; }
+
+    footer { padding: 40px 0 60px; border-top: 1px solid var(--border); }
+    .footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+    .footer-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text); font-weight: 700; }
+    .footer-logo img { width: 26px; height: 26px; border-radius: 6px; }
+    .footer-copy { font-size: 13px; color: var(--text-dim); }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a { font-size: 13px; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--text); }
+</style>
+</head>
+<body>
+<div class="ambient-bg"></div>
+
+<nav>
+    <div class="nav-inner">
+        <a href="index.html" class="logo">
+            <img src="kliprlogo.png" alt="Klipr" />
+            <span>klipr</span>
+        </a>
+        <a href="index.html" class="nav-back">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+            Back to home
+        </a>
+    </div>
+</nav>
+
+<div class="page-wrap">
+    <div class="container">
+        <div class="page-header">
+            <div class="page-eyebrow">Legal</div>
+            <h1>Terms of Service</h1>
+            <div class="updated">Last updated: April 19, 2026</div>
+        </div>
+
+        <div class="policy-section">
+            <div class="highlight-box">
+                <p><strong>Short version:</strong> You buy a lifetime license for one PC. Don't share your key, don't crack the software, and make sure you're following the rules of whatever streaming platforms you use. All sales are final — no refunds once a license key is issued.</p>
+            </div>
+        </div>
+
+        <div class="policy-section">
+            <h2>1. Acceptance of Terms</h2>
+            <p>By purchasing, downloading, installing, or using Klipr ("the Software"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, do not install or use the Software.</p>
+            <p>These Terms constitute a legally binding agreement between you ("User," "you") and Klipr ("we," "us," "our"). We reserve the right to update these Terms at any time. Continued use of the Software after updates are posted constitutes acceptance of the revised Terms.</p>
+        </div>
+
+        <div class="policy-section">
+            <h2>2. License Grant</h2>
+            <p>Upon purchase, Klipr grants you a non-exclusive, non-transferable, non-sublicensable, revocable license to install and use the Software on one (1) Windows PC for your personal or commercial purposes, subject to these Terms.</p>
+
+            <h3>You may:</h3>
+            <ul>
+                <li>Install and use Klipr on one computer at a time</li>
+                <li>Use clips generated by Klipr for personal or commercial purposes on social media platforms</li>
+                <li>Use Klipr to manage clip channels you own or operate professionally</li>
+            </ul>
+
+            <h3>You may not:</h3>
+            <ul>
+                <li>Share, resell, lease, sublicense, or transfer your license key to any other person</li>
+                <li>Reverse-engineer, decompile, disassemble, or attempt to derive the source code of the Software</li>
+                <li>Modify, adapt, or create derivative works based on the Software</li>
+                <li>Remove, alter, or obscure any proprietary notices or labels on the Software</li>
+                <li>Use the Software for any unlawful purpose or in violation of any applicable laws</li>
+                <li>Distribute, publish, or make the Software publicly available in any form</li>
+            </ul>
+        </div>
+
+        <div class="policy-section">
+            <h2>3. Platform Compliance — Your Responsibility</h2>
+            <div class="warning-box">
+                <p><strong>Important:</strong> You are solely responsible for ensuring your use of Klipr complies with the Terms of Service of Kick.com, Twitch.tv, YouTube, TikTok, and any other platforms you interact with using this software.</p>
+            </div>
+            <p>Klipr is a software tool. We do not control, endorse, or take responsibility for how you use it in relation to third-party platforms. Specifically:</p>
+            <ul>
+                <li>Twitch's Terms of Service restrict unauthorized automated access to their services. You are responsible for reviewing and complying with Twitch's current Terms of Service before use.</li>
+                <li>YouTube's Data API Terms of Service restrict certain forms of automated and bulk content management. You are responsible for reviewing and complying with YouTube's Terms of Service and API policies.</li>
+                <li>TikTok's Terms of Service govern automated posting to their platform. You are responsible for ensuring your use complies with TikTok's current policies.</li>
+            </ul>
+            <p>Klipr is not liable for any platform bans, account suspensions, content removals, demonetization, or other consequences resulting from your use of the Software in relation to any third-party platform's terms of service.</p>
+        </div>
+
+        <div class="policy-section">
+            <h2>4. Content Ownership and Copyright</h2>
+            <p>You are solely responsible for ensuring you have the legal right to clip, process, and upload any content you use with Klipr. This includes:</p>
+            <ul>
+                <li>Streams you own or produce yourself</li>
+                <li>Streams for which you have received explicit written permission from the content owner</li>
+                <li>Content that falls within applicable fair use or fair dealing provisions in your jurisdiction</li>
+            </ul>
+            <p>Klipr takes no responsibility for copyright claims, DMCA takedowns, Content ID matches, account strikes, or any other intellectual property disputes arising from content you choose to clip or upload using the Software.</p>
+            <p>We do not claim any ownership over content you create or process using Klipr. All clips you generate remain your property (subject to the rights of the original content owner).</p>
+        </div>
+
+        <div class="policy-section">
+            <h2>5. No Refund Policy</h2>
+            <div class="warning-box">
+                <p><strong>All sales are final.</strong> Due to the digital nature of this software, Klipr does not offer refunds, exchanges, or credits under any circumstances once a license key has been issued to you.</p>
+            </div>
+            <p>By completing your purchase you acknowledge and agree to this no-refund policy. If you have questions about whether Klipr is compatible with your setup or suitable for your intended use case, please contact us at <a href="mailto:support@klipr.app">support@klipr.app</a> before purchasing.</p>
+            <p>This policy applies regardless of whether you have used the Software, regardless of whether the Software functions as expected on your specific hardware configuration, and regardless of any changes made to third-party platform policies after your purchase.</p>
+        </div>
+
+        <div class="policy-section">
+            <h2>6. No Warranty — Software Provided As-Is</h2>
+            <p>THE SOFTWARE IS PROVIDED "AS IS" AND "AS AVAILABLE," WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED. TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, KLIPR EXPRESSLY DISCLAIMS ALL WARRANTIES, INCLUDING BUT NOT LIMITED TO:</p>
+            <ul>
+                <li>Any implied warranty of merchantability or fitness for a particular purpose</li>
+                <li>Any warranty that the Software will be uninterrupted, error-free, or free of bugs</li>
+                <li>Any warranty that the Software will be compatible with any specific hardware or software configuration</li>
+                <li>Any warranty that clips generated will be detected, processed, or uploaded successfully on any given occasion</li>
+                <li>Any warranty of continued compatibility with Kick, Twitch, YouTube, TikTok, or any other third-party platform</li>
+            </ul>
+            <p>Third-party platforms may change their APIs, Terms of Service, or technical requirements at any time. Klipr makes no guarantee of continued functionality if such changes occur, though we will endeavour to update the Software where reasonably possible.</p>
+        </div>
+
+        <div class="policy-section">
+            <h2>7. Limitation of Liability</h2>
+            <p>TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL KLIPR, ITS OWNERS, DEVELOPERS, OR AFFILIATES BE LIABLE FOR ANY:</p>
+            <ul>
+                <li>Indirect, incidental, special, consequential, or punitive damages</li>
+                <li>Loss of revenue, profits, data, or business opportunities</li>
+                <li>Platform account bans, suspensions, or strikes</li>
+                <li>Missed clips, failed uploads, or processing errors</li>
+                <li>Damages arising from your reliance on the Software for commercial purposes</li>
+            </ul>
+            <p>In any case, Klipr's total liability to you for any claim arising out of or related to these Terms or the Software shall not exceed the amount you paid for your license.</p>
+        </div>
+
+        <div class="policy-section">
+            <h2>8. Updates and Changes to the Software</h2>
+            <p>Klipr may release updates, patches, or new versions of the Software from time to time. Your lifetime license entitles you to receive these updates at no additional cost for as long as the Software is actively maintained.</p>
+            <p>We reserve the right to:</p>
+            <ul>
+                <li>Add, modify, or remove features from the Software at any time</li>
+                <li>Discontinue support for specific platforms or integrations</li>
+                <li>Require you to update to a new version to continue using certain features</li>
+                <li>Discontinue the Software entirely, with reasonable notice where possible</li>
+            </ul>
+            <p>No specific feature, platform integration, or functionality is guaranteed to be maintained indefinitely. Changes to third-party platform APIs or policies are outside our control and may affect Software functionality without notice.</p>
+        </div>
+
+        <div class="policy-section">
+            <h2>9. License Key and Activation</h2>
+            <p>Upon purchase, you will receive a unique license key that activates the Software on your device. This key:</p>
+            <ul>
+                <li>Is tied to your purchase and intended for use on one PC at a time</li>
+                <li>Must not be shared, posted publicly, or transferred to another person</li>
+                <li>Is verified against our licensing server (Gumroad) on each launch of the Software</li>
+            </ul>
+            <p>We reserve the right to revoke or deactivate a license key if we determine it has been shared, used fraudulently, or used in violation of these Terms. No refund will be issued upon license revocation due to Terms violation.</p>
+        </div>
+
+        <div class="policy-section">
+            <h2>10. YouTube API Services</h2>
+            <p>Klipr uses YouTube API Services to upload video content to your YouTube channel on your behalf. By connecting your YouTube account and using this feature, you additionally agree to:</p>
+            <ul>
+                <li><a href="https://www.youtube.com/t/terms" target="_blank">YouTube's Terms of Service</a></li>
+                <li><a href="https://policies.google.com/privacy" target="_blank">Google's Privacy Policy</a></li>
+                <li><a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank">Google API Services User Data Policy</a></li>
+            </ul>
+            <p>YouTube imposes daily upload quota limits on API-based uploads. Standard Google Cloud projects are subject to a quota of approximately 6 video uploads per day. Klipr cannot override or circumvent these platform-imposed limits. You are responsible for managing your upload volume within these limits.</p>
+        </div>
+
+        <div class="policy-section">
+            <h2>11. Termination</h2>
+            <p>These Terms remain in effect until terminated. Your rights under these Terms will terminate automatically and without notice if you fail to comply with any provision of these Terms.</p>
+            <p>Upon termination, you must cease all use of the Software and destroy all copies in your possession. Provisions of these Terms that by their nature should survive termination will survive, including ownership provisions, warranty disclaimers, and limitations of liability.</p>
+        </div>
+
+        <div class="policy-section">
+            <h2>12. Governing Law</h2>
+            <p>These Terms shall be governed by and construed in accordance with applicable law. Any disputes arising under or in connection with these Terms shall be subject to the exclusive jurisdiction of the courts of competent jurisdiction.</p>
+            <p>If any provision of these Terms is found to be unenforceable, the remaining provisions will continue in full force and effect.</p>
+        </div>
+
+        <div class="policy-section">
+            <h2>13. Entire Agreement</h2>
+            <p>These Terms, together with our <a href="privacy.html">Privacy Policy</a>, constitute the entire agreement between you and Klipr with respect to the Software and supersede all prior agreements, representations, and understandings.</p>
+        </div>
+
+        <div class="policy-section">
+            <h2>14. Contact</h2>
+            <p>For any questions regarding these Terms, please contact us at:</p>
+            <div class="highlight-box">
+                <p><strong>Klipr Support</strong><br/>
+                Email: <a href="mailto:support@klipr.app">support@klipr.app</a><br/>
+                Website: <a href="https://klipr.app">klipr.app</a></p>
+            </div>
+            <p style="font-size:13px;color:var(--text-dim);">Klipr is not affiliated with YouTube, Google, Twitch, Kick, TikTok, or Anthropic.</p>
+        </div>
+
+    </div>
+</div>
+
+<footer>
+    <div class="container footer-inner">
+        <a href="index.html" class="footer-logo">
+            <img src="kliprlogo.png" alt="Klipr" />
+            klipr
+        </a>
+        <div class="footer-copy">© 2026 Klipr. All rights reserved.</div>
+        <div class="footer-links">
+            <a href="terms.html">Terms</a>
+            <a href="privacy.html">Privacy</a>
+            <a href="mailto:support@klipr.app">Contact</a>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

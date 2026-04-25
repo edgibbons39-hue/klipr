@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Klipr — Automated Stream Clipping Bot</title>
+<meta name="description" content="Klipr automatically detects viral moments on Kick and Twitch, clips them, adds subtitles, and uploads to YouTube Shorts & TikTok — 24/7, while you sleep." />
+<link rel="icon" type="image/png" href="kliprlogo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+        --bg: #0a0a0f;
+        --bg-elevated: #111118;
+        --bg-card: #14141c;
+        --border: rgba(255,255,255,0.06);
+        --border-strong: rgba(255,255,255,0.12);
+        --text: #f4f4f7;
+        --text-muted: #9898a6;
+        --text-dim: #62626e;
+        --purple: #a855f7;
+        --purple-dim: #7c3aed;
+        --pink: #ec4899;
+        --gradient: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+        --gradient-soft: linear-gradient(135deg, rgba(168,85,247,0.15) 0%, rgba(236,72,153,0.15) 100%);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+        min-height: 100vh;
+    }
+
+    body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 1;
+        opacity: 0.025;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    .ambient-bg {
+        position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+    }
+    .ambient-bg::before, .ambient-bg::after {
+        content: ''; position: absolute; border-radius: 50%; filter: blur(120px);
+    }
+    .ambient-bg::before {
+        width: 600px; height: 600px; background: var(--purple);
+        top: -200px; left: -100px; opacity: 0.3;
+    }
+    .ambient-bg::after {
+        width: 500px; height: 500px; background: var(--pink);
+        top: 10%; right: -100px; opacity: 0.15;
+    }
+
+    .grid-bg {
+        position: fixed; inset: 0; pointer-events: none; z-index: 0;
+        background-image:
+            linear-gradient(to right, rgba(255,255,255,0.025) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(255,255,255,0.025) 1px, transparent 1px);
+        background-size: 64px 64px;
+        mask-image: radial-gradient(ellipse at center top, black 0%, transparent 70%);
+        -webkit-mask-image: radial-gradient(ellipse at center top, black 0%, transparent 70%);
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 2; }
+
+    /* ── NAV ── */
+    nav {
+        position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+        padding: 16px 0;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        background: rgba(10,10,15,0.75);
+        border-bottom: 1px solid var(--border);
+    }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; }
+
+    .logo {
+        display: flex; align-items: center; gap: 10px;
+        font-size: 22px; font-weight: 800; letter-spacing: -0.03em;
+        color: var(--text); text-decoration: none;
+    }
+    .logo img {
+        width: 36px; height: 36px; border-radius: 8px;
+        box-shadow: 0 4px 16px rgba(168,85,247,0.45);
+    }
+    .logo span { background: var(--gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+
+    .nav-links { display: flex; align-items: center; gap: 36px; }
+    .nav-links a {
+        color: var(--text-muted); text-decoration: none;
+        font-size: 14px; font-weight: 500; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    .btn {
+        display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+        padding: 12px 22px; border-radius: 10px; font-family: inherit;
+        font-size: 14px; font-weight: 600; text-decoration: none;
+        border: none; cursor: pointer; transition: all 0.2s; white-space: nowrap;
+    }
+    .btn-primary {
+        background: var(--gradient); color: white;
+        box-shadow: 0 4px 16px rgba(168,85,247,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+    }
+    .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 24px rgba(168,85,247,0.55), inset 0 1px 0 rgba(255,255,255,0.25);
+    }
+    .btn-secondary {
+        background: rgba(255,255,255,0.06); color: var(--text);
+        border: 1px solid var(--border-strong); backdrop-filter: blur(10px);
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
+    .btn-large { padding: 16px 32px; font-size: 15px; border-radius: 12px; }
+
+    .nav-mobile-toggle { display: none; background: none; border: none; color: var(--text); cursor: pointer; padding: 8px; }
+
+    /* ── HERO ── */
+    .hero { padding: 160px 0 100px; text-align: center; position: relative; }
+
+    .hero-badge {
+        display: inline-flex; align-items: center; gap: 8px;
+        padding: 6px 14px;
+        background: rgba(168,85,247,0.1); border: 1px solid rgba(168,85,247,0.25);
+        border-radius: 100px; font-size: 13px; font-weight: 500; color: #d8b4fe;
+        margin-bottom: 28px; animation: fadeInUp 0.8s ease both;
+    }
+    .hero-badge-dot {
+        width: 6px; height: 6px; background: #a855f7; border-radius: 50%;
+        box-shadow: 0 0 8px #a855f7; animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(1.2)} }
+
+    .hero h1 {
+        font-size: clamp(44px, 7vw, 84px); font-weight: 800;
+        line-height: 1; letter-spacing: -0.04em; margin-bottom: 24px;
+        animation: fadeInUp 0.8s ease 0.1s both;
+    }
+    .gradient-text {
+        background: var(--gradient); -webkit-background-clip: text;
+        background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
+    }
+
+    .hero p.subheadline {
+        font-size: clamp(16px, 2vw, 20px); color: var(--text-muted);
+        max-width: 640px; margin: 0 auto 40px; line-height: 1.55;
+        animation: fadeInUp 0.8s ease 0.2s both;
+    }
+
+    .hero-cta {
+        display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+        margin-bottom: 48px; animation: fadeInUp 0.8s ease 0.3s both;
+    }
+
+    .hero-trust {
+        display: flex; gap: 32px; justify-content: center; flex-wrap: wrap;
+        margin-bottom: 64px; animation: fadeInUp 0.8s ease 0.4s both;
+    }
+    .trust-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-muted); }
+    .trust-item svg { color: var(--purple); }
+
+    /* App screenshot */
+    .hero-mockup {
+        position: relative; max-width: 980px; margin: 0 auto;
+        animation: fadeInUp 1s ease 0.5s both;
+    }
+    .hero-mockup::before {
+        content: ''; position: absolute; inset: -40px;
+        background: radial-gradient(ellipse at center, rgba(168,85,247,0.25), transparent 70%);
+        filter: blur(40px); z-index: -1;
+    }
+    .mockup-frame {
+        background: linear-gradient(180deg, #1a1a24, #0f0f17);
+        border: 1px solid var(--border-strong); border-radius: 16px; overflow: hidden;
+        box-shadow: 0 40px 100px -20px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.04), inset 0 1px 0 rgba(255,255,255,0.05);
+    }
+    .mockup-titlebar {
+        display: flex; align-items: center; gap: 8px; padding: 12px 16px;
+        background: rgba(255,255,255,0.02); border-bottom: 1px solid var(--border);
+    }
+    .mockup-dots { display: flex; gap: 6px; }
+    .mockup-dots span { width: 10px; height: 10px; border-radius: 50%; }
+    .mockup-dots span:nth-child(1) { background: #ff5f57; }
+    .mockup-dots span:nth-child(2) { background: #ffbd2e; }
+    .mockup-dots span:nth-child(3) { background: #28c840; }
+    .mockup-title { font-size: 12px; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; margin-left: 12px; }
+    .mockup-screenshot { width: 100%; display: block; }
+
+    /* Fallback mockup if no screenshot */
+    .mockup-body {
+        display: grid; grid-template-columns: 200px 1fr; min-height: 400px;
+    }
+    .mockup-sidebar {
+        background: rgba(0,0,0,0.3); border-right: 1px solid var(--border); padding: 20px 12px;
+    }
+    .sidebar-logo { display: flex; align-items: center; gap: 8px; padding: 8px 12px; margin-bottom: 20px; }
+    .sidebar-logo img { width: 28px; height: 28px; border-radius: 6px; }
+    .sidebar-logo span { font-size: 14px; font-weight: 700; }
+    .sidebar-tagline { font-size: 10px; color: var(--text-dim); padding: 0 12px; margin-bottom: 16px; }
+
+    .sidebar-item {
+        padding: 10px 12px; border-radius: 8px; font-size: 13px; color: var(--text-muted);
+        display: flex; align-items: center; gap: 10px; margin-bottom: 4px;
+    }
+    .sidebar-item.active { background: rgba(168,85,247,0.15); color: #d8b4fe; border-left: 2px solid var(--purple); }
+
+    .mockup-content { padding: 24px; text-align: left; }
+    .mockup-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .mockup-header h2 { font-size: 22px; font-weight: 700; }
+    .start-btn {
+        background: #22c55e; color: white; border: none; padding: 8px 18px;
+        border-radius: 8px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px;
+    }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .status-stopped { background: #ef4444; box-shadow: 0 0 6px #ef4444; }
+
+    .mockup-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+    .stat-card {
+        background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+        border-radius: 10px; padding: 14px;
+    }
+    .stat-icon {
+        width: 32px; height: 32px; border-radius: 8px;
+        display: flex; align-items: center; justify-content: center; margin-bottom: 10px; font-size: 16px;
+    }
+    .stat-label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+    .stat-value { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; }
+    .stat-value.accent { background: var(--gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+
+    .log-area {
+        background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 8px;
+        padding: 12px; font-family: 'JetBrains Mono', monospace; font-size: 11px;
+        color: var(--text-dim); min-height: 80px;
+    }
+    .log-line { margin-bottom: 4px; }
+    .log-line .log-time { color: var(--purple); margin-right: 6px; }
+    .log-line .log-ok { color: #22c55e; }
+    .log-line .log-detect { color: #f59e0b; }
+
+    .status-bar {
+        background: rgba(0,0,0,0.4); border-top: 1px solid var(--border);
+        padding: 8px 20px; display: flex; align-items: center; gap: 8px;
+        font-size: 11px; color: #ef4444;
+    }
+
+    /* ── SECTIONS ── */
+    section { padding: 120px 0; position: relative; }
+
+    .section-header { text-align: center; max-width: 720px; margin: 0 auto 72px; }
+    .section-eyebrow {
+        display: inline-block; font-family: 'JetBrains Mono', monospace;
+        font-size: 12px; font-weight: 500; color: var(--purple);
+        text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 16px;
+    }
+    .section-header h2 {
+        font-size: clamp(32px, 5vw, 52px); font-weight: 800;
+        line-height: 1.05; letter-spacing: -0.03em; margin-bottom: 20px;
+    }
+    .section-header p { font-size: 18px; color: var(--text-muted); line-height: 1.55; }
+
+    /* ── HOW IT WORKS ── */
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; position: relative; }
+    .steps::before {
+        content: ''; position: absolute; top: 40px; left: 15%; right: 15%;
+        height: 1px; background: linear-gradient(90deg, transparent, var(--purple), var(--pink), transparent);
+        opacity: 0.3; z-index: 0;
+    }
+    .step {
+        position: relative; text-align: center; padding: 32px 24px;
+        background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px;
+        z-index: 1; transition: transform 0.3s, border-color 0.3s;
+    }
+    .step:hover { transform: translateY(-4px); border-color: var(--border-strong); }
+    .step-number {
+        width: 56px; height: 56px; margin: 0 auto 24px;
+        background: var(--bg-elevated); border: 1px solid var(--border-strong);
+        border-radius: 14px; display: flex; align-items: center; justify-content: center;
+        font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 600;
+        background-image: var(--gradient); -webkit-background-clip: text;
+        background-clip: text; -webkit-text-fill-color: transparent; position: relative;
+    }
+    .step-number::before {
+        content: ''; position: absolute; inset: -1px; border-radius: 14px; padding: 1px;
+        background: var(--gradient);
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0.4;
+    }
+    .step h3 { font-size: 20px; font-weight: 700; margin-bottom: 12px; letter-spacing: -0.01em; }
+    .step p { color: var(--text-muted); font-size: 15px; line-height: 1.55; }
+
+    /* ── FEATURES ── */
+    .features { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .feature-card {
+        grid-column: span 2; padding: 32px;
+        background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px;
+        position: relative; overflow: hidden; transition: border-color 0.3s, transform 0.3s;
+    }
+    .feature-card:hover { border-color: var(--border-strong); transform: translateY(-2px); }
+    .feature-card::before {
+        content: ''; position: absolute; top: 0; right: 0; width: 200px; height: 200px;
+        background: radial-gradient(circle, rgba(168,85,247,0.08), transparent 70%); pointer-events: none;
+    }
+    .feature-card.wide {
+        grid-column: span 4; display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: center;
+    }
+    .feature-icon {
+        width: 44px; height: 44px; background: rgba(168,85,247,0.1);
+        border: 1px solid rgba(168,85,247,0.2); border-radius: 10px;
+        display: flex; align-items: center; justify-content: center; margin-bottom: 20px; color: var(--purple);
+    }
+    .feature-icon svg { width: 22px; height: 22px; }
+    .feature-card h3 { font-size: 19px; font-weight: 700; margin-bottom: 10px; letter-spacing: -0.01em; }
+    .feature-card p { color: var(--text-muted); font-size: 14px; line-height: 1.6; }
+
+    .feature-visual {
+        position: relative; height: 180px; background: var(--bg-elevated);
+        border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+        display: flex; align-items: center; justify-content: center;
+        color: var(--text-dim); font-size: 13px; font-family: 'JetBrains Mono', monospace;
+    }
+
+    .chat-spike { width: 100%; height: 100%; padding: 16px; display: flex; align-items: flex-end; justify-content: space-between; gap: 3px; }
+    .chat-spike .bar { flex: 1; background: linear-gradient(180deg, var(--purple), var(--purple-dim)); border-radius: 2px 2px 0 0; opacity: 0.7; animation: barPulse 3s ease-in-out infinite; }
+    @keyframes barPulse { 0%,100%{transform:scaleY(0.5)} 50%{transform:scaleY(1)} }
+
+    /* AI Score visual */
+    .ai-scores { width: 100%; padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+    .score-row { display: flex; align-items: center; gap: 10px; }
+    .score-label { font-size: 11px; color: var(--text-muted); width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .score-bar-wrap { flex: 1; height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden; }
+    .score-bar { height: 100%; border-radius: 3px; background: var(--gradient); animation: growBar 2s ease-out forwards; transform-origin: left; }
+    @keyframes growBar { from{transform:scaleX(0)} to{transform:scaleX(1)} }
+    .score-num { font-size: 11px; font-weight: 700; color: var(--purple); width: 20px; text-align: right; }
+
+    /* Schedule visual */
+    .schedule-vis { width: 100%; padding: 16px; display: flex; flex-direction: column; gap: 6px; }
+    .sched-row { display: flex; align-items: center; gap: 8px; }
+    .sched-time { font-size: 10px; color: var(--text-dim); width: 40px; font-family: 'JetBrains Mono', monospace; }
+    .sched-pill { height: 20px; border-radius: 4px; background: var(--gradient); opacity: 0.7; display: flex; align-items: center; padding: 0 8px; }
+    .sched-pill span { font-size: 9px; color: white; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* ── PIPELINE ── */
+    .pipeline { display: flex; align-items: center; gap: 0; overflow-x: auto; padding-bottom: 8px; }
+    .pipe-step {
+        flex: 1; min-width: 140px; text-align: center; padding: 24px 16px;
+        background: var(--bg-card); border: 1px solid var(--border); position: relative;
+    }
+    .pipe-step:first-child { border-radius: 14px 0 0 14px; }
+    .pipe-step:last-child { border-radius: 0 14px 14px 0; }
+    .pipe-arrow {
+        width: 32px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+        color: var(--purple); font-size: 18px; background: var(--bg-card);
+        border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); height: 100%;
+        padding: 24px 0;
+    }
+    .pipe-icon { font-size: 24px; margin-bottom: 8px; }
+    .pipe-label { font-size: 12px; font-weight: 600; margin-bottom: 4px; }
+    .pipe-sub { font-size: 11px; color: var(--text-dim); }
+
+    /* ── PRICING ── */
+    .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 1000px; margin: 0 auto; }
+
+    .pricing-card {
+        position: relative; background: linear-gradient(180deg, var(--bg-card), var(--bg));
+        border: 1px solid var(--border-strong); border-radius: 20px; padding: 36px 32px;
+        overflow: hidden; transition: transform 0.3s, border-color 0.3s;
+    }
+    .pricing-card:hover { transform: translateY(-4px); }
+    .pricing-card.featured {
+        border-color: rgba(168,85,247,0.5);
+        background: linear-gradient(180deg, rgba(168,85,247,0.08), var(--bg));
+    }
+    .pricing-card.featured::before {
+        content: ''; position: absolute; inset: 0; border-radius: 20px; padding: 1px;
+        background: linear-gradient(180deg, rgba(168,85,247,0.6), transparent 50%);
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none;
+    }
+    .plan-badge {
+        display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px;
+        background: rgba(168,85,247,0.15); border: 1px solid rgba(168,85,247,0.3);
+        border-radius: 100px; font-size: 11px; font-weight: 600; color: #d8b4fe;
+        margin-bottom: 20px;
+    }
+    .plan-badge.popular { background: rgba(236,72,153,0.15); border-color: rgba(236,72,153,0.3); color: #f9a8d4; }
+    .pricing-title { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+    .pricing-subtitle { color: var(--text-muted); font-size: 13px; margin-bottom: 28px; }
+    .pricing-price { display: flex; align-items: baseline; gap: 6px; margin-bottom: 4px; }
+    .pricing-price .amount { font-size: 48px; font-weight: 800; letter-spacing: -0.03em; background: var(--gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+    .pricing-price .currency { font-size: 22px; color: var(--text-muted); font-weight: 600; }
+    .pricing-price .period { font-size: 14px; color: var(--text-dim); }
+    .pricing-note { font-size: 12px; color: var(--text-dim); margin-bottom: 28px; font-family: 'JetBrains Mono', monospace; }
+    .pricing-features { list-style: none; margin-bottom: 28px; }
+    .pricing-features li {
+        display: flex; align-items: flex-start; gap: 10px; padding: 9px 0;
+        font-size: 14px; color: var(--text); border-bottom: 1px solid var(--border);
+    }
+    .pricing-features li:last-child { border-bottom: none; }
+    .pricing-features .check {
+        flex-shrink: 0; width: 18px; height: 18px;
+        background: rgba(168,85,247,0.15); border-radius: 50%;
+        display: flex; align-items: center; justify-content: center; color: var(--purple); margin-top: 1px;
+    }
+    .pricing-card .btn { width: 100%; }
+
+    /* ── FAQ ── */
+    .faq { max-width: 800px; margin: 0 auto; }
+    .faq-item { border-bottom: 1px solid var(--border); }
+    .faq-question {
+        width: 100%; padding: 24px 0; display: flex; justify-content: space-between;
+        align-items: center; gap: 24px; background: none; border: none;
+        color: var(--text); font-family: inherit; font-size: 17px; font-weight: 600;
+        text-align: left; cursor: pointer; letter-spacing: -0.01em; transition: color 0.2s;
+    }
+    .faq-question:hover { color: #d8b4fe; }
+    .faq-icon {
+        width: 32px; height: 32px; flex-shrink: 0; background: rgba(255,255,255,0.04);
+        border: 1px solid var(--border); border-radius: 8px;
+        display: flex; align-items: center; justify-content: center; transition: all 0.3s;
+    }
+    .faq-item.open .faq-icon { background: var(--gradient); border-color: transparent; transform: rotate(45deg); }
+    .faq-icon svg { width: 14px; height: 14px; }
+    .faq-answer {
+        max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.4s ease;
+        color: var(--text-muted); font-size: 15px; line-height: 1.65;
+    }
+    .faq-item.open .faq-answer { max-height: 400px; padding-bottom: 24px; }
+
+    /* ── FINAL CTA ── */
+    .final-cta {
+        text-align: center; padding: 100px 24px; margin: 0 24px 80px;
+        background: linear-gradient(180deg, rgba(168,85,247,0.08), transparent);
+        border: 1px solid var(--border-strong); border-radius: 24px;
+        position: relative; overflow: hidden;
+    }
+    .final-cta::before {
+        content: ''; position: absolute; inset: 0;
+        background: radial-gradient(ellipse at center top, rgba(168,85,247,0.2), transparent 60%);
+        pointer-events: none;
+    }
+    .final-cta h2 { font-size: clamp(32px, 5vw, 52px); font-weight: 800; line-height: 1.05; letter-spacing: -0.03em; margin-bottom: 20px; position: relative; }
+    .final-cta p { font-size: 18px; color: var(--text-muted); max-width: 500px; margin: 0 auto 32px; position: relative; }
+
+    /* ── FOOTER ── */
+    footer { padding: 40px 0 60px; border-top: 1px solid var(--border); }
+    .footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+    .footer-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text); font-weight: 700; }
+    .footer-logo img { width: 28px; height: 28px; border-radius: 6px; }
+    .footer-copy { font-size: 13px; color: var(--text-dim); }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a { font-size: 13px; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--text); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeInUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.8s ease, transform 0.8s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+        .nav-links { display: none; }
+        .nav-links.mobile-open {
+            display: flex; position: absolute; top: 100%; left: 0; right: 0;
+            flex-direction: column; gap: 0; background: var(--bg-elevated);
+            border-top: 1px solid var(--border); padding: 16px 24px;
+        }
+        .nav-links.mobile-open a { padding: 14px 0; border-bottom: 1px solid var(--border); }
+        .nav-links.mobile-open .btn { margin-top: 12px; width: 100%; }
+        .nav-mobile-toggle { display: block; }
+        .hero { padding: 120px 0 80px; }
+        section { padding: 80px 0; }
+        .steps { grid-template-columns: 1fr; }
+        .steps::before { display: none; }
+        .features { grid-template-columns: repeat(2, 1fr); }
+        .feature-card, .feature-card.wide { grid-column: span 2; }
+        .feature-card.wide { grid-template-columns: 1fr; }
+        .pricing-grid { grid-template-columns: 1fr; max-width: 440px; }
+        .pipeline { flex-wrap: wrap; }
+        .mockup-body { grid-template-columns: 1fr; }
+        .mockup-sidebar { display: none; }
+        .mockup-stats { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 560px) {
+        .features { grid-template-columns: 1fr; }
+        .feature-card, .feature-card.wide { grid-column: span 1; }
+        .hero-cta { flex-direction: column; align-items: stretch; }
+        .hero-cta .btn { width: 100%; }
+        .footer-inner { flex-direction: column; text-align: center; }
+    }
+</style>
+</head>
+<body>
+
+<div class="ambient-bg"></div>
+<div class="grid-bg"></div>
+
+<!-- NAV -->
+<nav>
+    <div class="container nav-inner">
+        <a href="#" class="logo">
+            <img src="kliprlogo.png" alt="Klipr" />
+            <span>klipr</span>
+        </a>
+        <div class="nav-links" id="navLinks">
+            <a href="#how-it-works">How it works</a>
+            <a href="#features">Features</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#faq">FAQ</a>
+            <a href="security.html">Security</a>
+            <a href="https://klipr.gumroad.com/l/klipr" class="btn btn-primary" target="_blank">Buy Now</a>
+        </div>
+        <button class="nav-mobile-toggle" id="mobileToggle" aria-label="Toggle menu">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="3" y1="6" x2="21" y2="6"/>
+                <line x1="3" y1="12" x2="21" y2="12"/>
+                <line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+        </button>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="container">
+        <div class="hero-badge">
+            <span class="hero-badge-dot"></span>
+            Kick &amp; Twitch — fully automated
+        </div>
+        <h1>
+            Go Viral<br/>
+            <span class="gradient-text">While You Sleep.</span>
+        </h1>
+        <p class="subheadline">
+            Klipr watches your streamers 24/7, detects the moment chat explodes,
+            cuts a polished vertical clip, and uploads it to YouTube Shorts &amp; TikTok —
+            subtitled, AI-titled, zero effort.
+        </p>
+        <div class="hero-cta">
+            <a href="https://klipr.gumroad.com/l/klipr" class="btn btn-primary btn-large" target="_blank">
+                Get Klipr — $49
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </a>
+            <a href="#how-it-works" class="btn btn-secondary btn-large">See how it works</a>
+        </div>
+        <div class="hero-trust">
+            <div class="trust-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                One-time payment
+            </div>
+            <div class="trust-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Lifetime updates
+            </div>
+            <div class="trust-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Windows app, no technical setup
+            </div>
+            <div class="trust-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Kick &amp; Twitch supported
+            </div>
+        </div>
+
+        <!-- App Screenshot -->
+        <div class="hero-mockup">
+            <div class="mockup-frame">
+                <div class="mockup-titlebar">
+                    <div class="mockup-dots">
+                        <span></span><span></span><span></span>
+                    </div>
+                    <div class="mockup-title">Klipr — dashboard</div>
+                </div>
+                <!-- Drop your dashboard screenshot as dashboard.png in this folder -->
+                <img src="dashboard.png" alt="Klipr dashboard" class="mockup-screenshot"
+                     onerror="this.style.display='none'; document.getElementById('fallback-mockup').style.display='grid';" />
+                <!-- Fallback coded mockup if screenshot not present -->
+                <div class="mockup-body" id="fallback-mockup" style="display:none;">
+                    <div class="mockup-sidebar">
+                        <div class="sidebar-logo">
+                            <img src="kliprlogo.png" alt="Klipr" />
+                            <span>Klipr</span>
+                        </div>
+                        <div class="sidebar-tagline">Always viral.</div>
+                        <div class="sidebar-item active">📊 Dashboard</div>
+                        <div class="sidebar-item">🎬 Clips</div>
+                        <div class="sidebar-item">📈 Analytics</div>
+                        <div class="sidebar-item">🤖 AI Review</div>
+                        <div class="sidebar-item">⚙️ Settings</div>
+                    </div>
+                    <div class="mockup-content">
+                        <div class="mockup-header">
+                            <h2>Dashboard</h2>
+                            <div style="display:flex;align-items:center;gap:12px;">
+                                <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#ef4444;">
+                                    <div class="status-dot status-stopped"></div>Stopped
+                                </div>
+                                <div class="start-btn">▶ Start Bot</div>
+                            </div>
+                        </div>
+                        <div class="mockup-stats">
+                            <div class="stat-card">
+                                <div class="stat-icon" style="background:rgba(168,85,247,0.15);">🎬</div>
+                                <div class="stat-label">Clips Today</div>
+                                <div class="stat-value accent">0</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon" style="background:rgba(236,72,153,0.15);">📤</div>
+                                <div class="stat-label">Uploaded Today</div>
+                                <div class="stat-value">0</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon" style="background:rgba(34,197,94,0.15);">📡</div>
+                                <div class="stat-label">Streamers Live</div>
+                                <div class="stat-value">0</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon" style="background:rgba(245,158,11,0.15);">📊</div>
+                                <div class="stat-label">YT Quota Used</div>
+                                <div class="stat-value">0</div>
+                            </div>
+                        </div>
+                        <div style="font-size:13px;font-weight:600;margin-bottom:10px;">Live Log</div>
+                        <div class="log-area">
+                            <div class="log-line"><span class="log-time">[08:14]</span><span class="log-ok">[edmatthews] Connected to chat</span></div>
+                            <div class="log-line"><span class="log-time">[08:19]</span><span class="log-detect">[edmatthews] ⚡ Spike detected! Score: 258 — clipping...</span></div>
+                            <div class="log-line"><span class="log-time">[08:19]</span><span class="log-ok">[edmatthews] Clip ready → queued for upload at 10:00</span></div>
+                        </div>
+                    </div>
+                    <div class="status-bar">
+                        <div class="status-dot status-stopped"></div>Bot Stopped
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how-it-works">
+    <div class="container">
+        <div class="section-header reveal">
+            <div class="section-eyebrow">How it works</div>
+            <h2>From live stream to viral short in minutes</h2>
+            <p>Set it up once. Klipr handles detection, clipping, formatting, and uploading — all automatically.</p>
+        </div>
+
+        <!-- Pipeline visual -->
+        <div class="pipeline reveal" style="margin-bottom: 48px;">
+            <div class="pipe-step">
+                <div class="pipe-icon">📡</div>
+                <div class="pipe-label">Monitor</div>
+                <div class="pipe-sub">Chat activity tracked live</div>
+            </div>
+            <div class="pipe-arrow">→</div>
+            <div class="pipe-step">
+                <div class="pipe-icon">⚡</div>
+                <div class="pipe-label">Detect</div>
+                <div class="pipe-sub">Chat spike triggers clip</div>
+            </div>
+            <div class="pipe-arrow">→</div>
+            <div class="pipe-step">
+                <div class="pipe-icon">✂️</div>
+                <div class="pipe-label">Clip</div>
+                <div class="pipe-sub">Last 30s cut from buffer</div>
+            </div>
+            <div class="pipe-arrow">→</div>
+            <div class="pipe-step">
+                <div class="pipe-icon">🎬</div>
+                <div class="pipe-label">Format</div>
+                <div class="pipe-sub">9:16 + subtitles + title</div>
+            </div>
+            <div class="pipe-arrow">→</div>
+            <div class="pipe-step">
+                <div class="pipe-icon">🤖</div>
+                <div class="pipe-label">AI Score</div>
+                <div class="pipe-sub">Viral potential rated 1-10</div>
+            </div>
+            <div class="pipe-arrow">→</div>
+            <div class="pipe-step">
+                <div class="pipe-icon">🚀</div>
+                <div class="pipe-label">Upload</div>
+                <div class="pipe-sub">YouTube & TikTok, scheduled</div>
+            </div>
+        </div>
+
+        <div class="steps">
+            <div class="step reveal">
+                <div class="step-number">01</div>
+                <h3>Add your streamers</h3>
+                <p>Add any Kick or Twitch channels you want to monitor. Set per-streamer sensitivity thresholds. Hit Start and walk away — Klipr runs silently in your system tray.</p>
+            </div>
+            <div class="step reveal">
+                <div class="step-number">02</div>
+                <h3>Klipr watches chat 24/7</h3>
+                <p>The detection engine tracks live chat velocity in real time. When activity spikes 1.5× above the streamer's rolling baseline, that's a viral moment — captured instantly.</p>
+            </div>
+            <div class="step reveal">
+                <div class="step-number">03</div>
+                <h3>Clips go live automatically</h3>
+                <p>Each clip gets transcribed, converted to vertical 9:16, subtitled, AI-titled, scored for viral potential, and scheduled to upload throughout the day — not all at once.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+    <div class="container">
+        <div class="section-header reveal">
+            <div class="section-eyebrow">Features</div>
+            <h2>Everything a clip channel needs. Nothing it doesn't.</h2>
+            <p>A complete end-to-end pipeline built for one thing: turning streams into an endless feed of viral shorts.</p>
+        </div>
+        <div class="features">
+
+            <!-- Chat detection -->
+            <div class="feature-card wide reveal">
+                <div>
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                    </div>
+                    <h3>Real-time chat spike detection</h3>
+                    <p>Klipr monitors live chat velocity on Kick and Twitch simultaneously. When the room explodes — spam, emotes, mass reactions — it knows a clip just happened and captures the moment before it's gone. The detection self-calibrates per streamer, so it never false-triggers on consistently high-traffic chats.</p>
+                </div>
+                <div class="feature-visual">
+                    <div class="chat-spike">
+                        <div class="bar" style="height:25%;animation-delay:0s"></div>
+                        <div class="bar" style="height:35%;animation-delay:0.1s"></div>
+                        <div class="bar" style="height:30%;animation-delay:0.2s"></div>
+                        <div class="bar" style="height:45%;animation-delay:0.3s"></div>
+                        <div class="bar" style="height:55%;animation-delay:0.4s"></div>
+                        <div class="bar" style="height:90%;animation-delay:0.5s;opacity:1;background:linear-gradient(180deg,#ec4899,#a855f7)"></div>
+                        <div class="bar" style="height:100%;animation-delay:0.55s;opacity:1;background:linear-gradient(180deg,#ec4899,#a855f7)"></div>
+                        <div class="bar" style="height:85%;animation-delay:0.6s;opacity:1;background:linear-gradient(180deg,#ec4899,#a855f7)"></div>
+                        <div class="bar" style="height:65%;animation-delay:0.7s"></div>
+                        <div class="bar" style="height:45%;animation-delay:0.8s"></div>
+                        <div class="bar" style="height:35%;animation-delay:0.9s"></div>
+                        <div class="bar" style="height:30%;animation-delay:1s"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vertical + subtitles -->
+            <div class="feature-card reveal">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+                </div>
+                <h3>Vertical 9:16 + burned-in subtitles</h3>
+                <p>Every clip is automatically reframed to 9:16 with a blurred background fill. Accurate word-by-word captions are transcribed locally using Whisper and burned directly into the video — no third-party editor, no upload to external services.</p>
+            </div>
+
+            <!-- AI headlines -->
+            <div class="feature-card reveal">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+                </div>
+                <h3>AI-generated headlines</h3>
+                <p>Every clip gets a punchy, click-worthy title generated from the actual transcript. Over time Klipr learns which headline styles perform best for each streamer and uses real view data to write better titles automatically.</p>
+            </div>
+
+            <!-- AI viral scoring -->
+            <div class="feature-card wide reveal">
+                <div>
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    </div>
+                    <h3>AI viral scoring — before you upload</h3>
+                    <p>Before anything goes live, Klipr's AI reviews every clip and rates it 1-10 for viral potential — based on headline quality, how hard chat reacted, streamer recognition, and replay value. Clips are ranked so you always know which ones to push first. The AI gets smarter over time by learning from your real view counts.</p>
+                </div>
+                <div class="feature-visual">
+                    <div class="ai-scores">
+                        <div class="score-row">
+                            <div class="score-label">edmatthews</div>
+                            <div class="score-bar-wrap"><div class="score-bar" style="width:90%;animation-delay:0.1s"></div></div>
+                            <div class="score-num">9</div>
+                        </div>
+                        <div class="score-row">
+                            <div class="score-label">clavicular</div>
+                            <div class="score-bar-wrap"><div class="score-bar" style="width:80%;animation-delay:0.3s"></div></div>
+                            <div class="score-num">8</div>
+                        </div>
+                        <div class="score-row">
+                            <div class="score-label">streamer3</div>
+                            <div class="score-bar-wrap"><div class="score-bar" style="width:60%;animation-delay:0.5s"></div></div>
+                            <div class="score-num">6</div>
+                        </div>
+                        <div class="score-row">
+                            <div class="score-label">streamer4</div>
+                            <div class="score-bar-wrap"><div class="score-bar" style="width:40%;animation-delay:0.7s"></div></div>
+                            <div class="score-num">4</div>
+                        </div>
+                        <div class="score-row">
+                            <div class="score-label">streamer5</div>
+                            <div class="score-bar-wrap"><div class="score-bar" style="width:30%;animation-delay:0.9s"></div></div>
+                            <div class="score-num">3</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Smart scheduling -->
+            <div class="feature-card reveal">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                </div>
+                <h3>Smart upload scheduling</h3>
+                <p>Klipr spaces uploads evenly across your posting window — not all at once. Set your hours and daily max, and clips go live throughout the day at optimal intervals. The YouTube and TikTok algorithms reward consistent posting, not bulk dumps.</p>
+            </div>
+
+            <!-- Multi platform upload -->
+            <div class="feature-card reveal">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                </div>
+                <h3>Direct upload to YouTube &amp; TikTok</h3>
+                <p>Connect your accounts once. Clips upload directly to YouTube Shorts and TikTok under your channels — all views, subscribers, and revenue go straight to you. Instagram Reels support coming soon.</p>
+            </div>
+
+            <!-- Unlimited streamers -->
+            <div class="feature-card reveal">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
+                <h3>Unlimited streamers at once</h3>
+                <p>Monitor one channel or dozens simultaneously across Kick and Twitch. Each runs in its own independent loop — no interference, no slowdown, no per-streamer fees.</p>
+            </div>
+
+            <!-- Runs silently -->
+            <div class="feature-card reveal">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+                <h3>Runs silently, 24/7</h3>
+                <p>A lightweight Windows desktop app that lives in your system tray. Minimal CPU usage. Start it once and it handles everything in the background — you'll forget it's running until clips start appearing.</p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+    <div class="container">
+        <div class="section-header reveal">
+            <div class="section-eyebrow">Pricing</div>
+            <h2>Simple, honest pricing.</h2>
+            <p>One payment. No subscriptions. No features held hostage.</p>
+        </div>
+        <div class="pricing-grid reveal">
+
+            <!-- Starter -->
+            <div class="pricing-card">
+                <div class="plan-badge">Starter</div>
+                <h3 class="pricing-title">Klipr Starter</h3>
+                <p class="pricing-subtitle">For streamers running their own clip channel.</p>
+                <div class="pricing-price">
+                    <span class="currency">$</span>
+                    <span class="amount">29</span>
+                    <span class="period">one-time</span>
+                </div>
+                <div class="pricing-note">// billed once, yours forever</div>
+                <ul class="pricing-features">
+                    <li><span class="check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>3 streamers monitored</li>
+                    <li><span class="check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>YouTube Shorts upload</li>
+                    <li><span class="check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>Auto subtitles + watermark</li>
+                    <li><span class="check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>AI viral scoring</li>
+                    <li><span class="check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>Upload scheduling</li>
+                    <li><span class="check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>Lifetime updates</li>
+                </ul>
+                <a href="https://klipr.gumroad.com/l/klipr-starter" class="btn btn-secondary" target="_blank">Get Starter</a>
+            </div>
+
+            <!-- Pro (featured) -->
+            <div class="pricing-card featured">
+                <div class="plan-badge popular">⚡ Most Popular</div>
+                <h3 class="pricing-title">Klipr Pro</h3>
+                <p class="pricing-subtitle">For clip channels running multiple streamers.</p>
+                <div class="pricing-price">
+                    <span class="currency">$</span>
+                    <span class="amount">59</span>
+                    <span class="period">one-time</span>
+                </div>
+                <div class="pricing-note">// billed once, yours forever</div>
+                <ul class="pricing-features">
+                    <li><span class="check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>Unlimited streamers</li>
+                    <li><span class="check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>YouTube + TikTok upload</li>
+                    <li><span class="check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>All Starter features</li>
+                    <li><span class="check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>Kick + Twitch monitoring</li>
+                    <li><span class="check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>All future platforms free</li>
+                    <li><span class="check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>Priority support</li>
+                </ul>
+                <a href="https://klipr.gumroad.com/l/klipr" class="btn btn-primary" target="_blank">
+                    Get Klipr Pro
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                </a>
+            </div>
+
+            <!-- Agency -->
+            <div class="pricing-card">
+                <div class="plan-badge">Agency</div>
+                <h3 class="pricing-title">Klipr Agency</h3>
+                <p class="pricing-subtitle">For social media managers and clip agencies.</p>
+                <div class="pricing-price">
+                    <span class="currency">$</span>
+                    <span class="amount">149</span>
+                    <span class="period">one-time</span>
+                </div>
+                <div class="pricing-note">// billed once, yours forever</div>
+                <ul class="pricing-features">
+                    <li><span class="check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>Everything in Pro</li>
+                    <li><span class="check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>Multiple YouTube accounts</li>
+                    <li><span class="check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>White-label watermark</li>
+                    <li><span class="check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>Manage multiple creators</li>
+                    <li><span class="check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>Bulk clip management</li>
+                    <li><span class="check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>Priority support</li>
+                </ul>
+                <a href="https://klipr.gumroad.com/l/klipr-agency" class="btn btn-secondary" target="_blank">Get Agency</a>
+            </div>
+
+        </div>
+        <p style="text-align:center;margin-top:24px;font-size:13px;color:var(--text-dim);">All sales final. No refunds. <a href="#faq" style="color:var(--purple);text-decoration:none;">Questions? See FAQ →</a></p>
+    </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+    <div class="container">
+        <div class="section-header reveal">
+            <div class="section-eyebrow">FAQ</div>
+            <h2>Frequently asked questions</h2>
+            <p>Everything you need to know before getting started.</p>
+        </div>
+        <div class="faq reveal">
+            <div class="faq-item">
+                <button class="faq-question">
+                    Do I need to keep my PC on?
+                    <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+                </button>
+                <div class="faq-answer">
+                    Yes. Klipr runs locally on your Windows PC so it needs to be on and connected to the internet. Most users let it run in the background on a dedicated machine or leave their main PC running overnight — it uses minimal CPU and RAM when idle.
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">
+                    Which streaming platforms does Klipr support?
+                    <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+                </button>
+                <div class="faq-answer">
+                    Klipr currently monitors Kick and Twitch. Both platforms are fully supported — you can monitor channels from either or both at the same time. Additional platforms are on the roadmap and will arrive as free updates.
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">
+                    Where does Klipr upload clips?
+                    <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+                </button>
+                <div class="faq-answer">
+                    YouTube Shorts and TikTok. You connect your own accounts during setup — all views, subscribers, and revenue go directly to you. Instagram Reels is coming soon. YouTube has a daily API upload limit of approximately 6 videos per day on a standard project quota.
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">
+                    Is there a monthly fee?
+                    <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+                </button>
+                <div class="faq-answer">
+                    No. Klipr is a one-time purchase. You pay once and use it forever. Every future update — new platforms, new features, improvements — ships to you for free.
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">
+                    Do I need technical knowledge?
+                    <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+                </button>
+                <div class="faq-answer">
+                    Not at all. Download the installer, run it, enter your license key, connect your YouTube account, add the streamers you want, and hit Start. No Python, no terminal, no configuration files. If you can install an app you can run Klipr.
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">
+                    What are the hardware requirements?
+                    <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+                </button>
+                <div class="faq-answer">
+                    Windows 10 or 11 (64-bit), 8GB RAM minimum (16GB recommended for smooth transcription), a modern multi-core CPU, and a stable broadband internet connection. Klipr uses local AI transcription via Whisper which is CPU-intensive — a faster CPU means faster clip processing.
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">
+                    What is your refund policy?
+                    <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+                </button>
+                <div class="faq-answer">
+                    All sales are final. Due to the digital nature of the software, we do not offer refunds once a license key has been issued. If you have questions about whether Klipr is right for your setup, reach out before purchasing and we'll help you decide.
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FINAL CTA -->
+<div class="container">
+    <div class="final-cta reveal">
+        <h2>Your automated clipping<br/>machine is waiting.</h2>
+        <p>Stop manually trawling streams for clips. Let Klipr do it while you sleep.</p>
+        <a href="https://klipr.gumroad.com/l/klipr" class="btn btn-primary btn-large" target="_blank">
+            Get Klipr — $49
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+    <div class="container footer-inner">
+        <a href="#" class="footer-logo">
+            <img src="kliprlogo.png" alt="Klipr" />
+            klipr
+        </a>
+        <div class="footer-copy">© 2026 Klipr. All rights reserved.</div>
+        <div class="footer-links">
+            <a href="terms.html">Terms</a>
+            <a href="privacy.html">Privacy</a>
+            <a href="security.html">Security</a>
+            <a href="mailto:support@klipr.app">Contact</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Mobile nav
+    const mobileToggle = document.getElementById('mobileToggle');
+    const navLinks = document.getElementById('navLinks');
+    mobileToggle.addEventListener('click', () => navLinks.classList.toggle('mobile-open'));
+    navLinks.querySelectorAll('a').forEach(l => l.addEventListener('click', () => navLinks.classList.remove('mobile-open')));
+
+    // FAQ accordion
+    document.querySelectorAll('.faq-item').forEach(item => {
+        item.querySelector('.faq-question').addEventListener('click', () => {
+            const isOpen = item.classList.contains('open');
+            document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+            if (!isOpen) item.classList.add('open');
+        });
+    });
+
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+    }, { threshold: 0.08, rootMargin: '0px 0px -60px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Animate score bars on scroll
+    const scoreObserver = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                e.target.querySelectorAll('.score-bar').forEach((bar, i) => {
+                    bar.style.animation = `none`;
+                    bar.offsetHeight;
+                    bar.style.animation = `growBar 1s ease-out ${i * 0.15}s forwards`;
+                });
+            }
+        });
+    }, { threshold: 0.3 });
+    document.querySelectorAll('.ai-scores').forEach(el => scoreObserver.observe(el));
+</script>
+</body>
+</html>

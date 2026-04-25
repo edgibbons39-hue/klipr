@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Privacy Policy — Klipr</title>
+<meta name="description" content="Klipr Privacy Policy — how we collect, use, and protect your information." />
+<link rel="icon" type="image/png" href="kliprlogo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+        --bg: #0a0a0f; --bg-card: #14141c; --border: rgba(255,255,255,0.06);
+        --border-strong: rgba(255,255,255,0.12); --text: #f4f4f7;
+        --text-muted: #9898a6; --text-dim: #62626e;
+        --purple: #a855f7; --pink: #ec4899;
+        --gradient: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background: var(--bg); color: var(--text); line-height: 1.7;
+        -webkit-font-smoothing: antialiased; overflow-x: hidden;
+    }
+    .ambient-bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .ambient-bg::before {
+        content: ''; position: absolute; border-radius: 50%; filter: blur(140px);
+        width: 500px; height: 500px; background: var(--purple);
+        top: -200px; left: -100px; opacity: 0.2;
+    }
+    .container { max-width: 800px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 2; }
+
+    /* NAV */
+    nav {
+        position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+        padding: 16px 0; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+        background: rgba(10,10,15,0.8); border-bottom: 1px solid var(--border);
+    }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+    .logo { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 800; letter-spacing: -0.03em; color: var(--text); text-decoration: none; }
+    .logo img { width: 32px; height: 32px; border-radius: 7px; box-shadow: 0 4px 12px rgba(168,85,247,0.4); }
+    .logo span { background: var(--gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+    .nav-back { font-size: 13px; color: var(--text-muted); text-decoration: none; display: flex; align-items: center; gap: 6px; transition: color 0.2s; }
+    .nav-back:hover { color: var(--text); }
+
+    /* CONTENT */
+    .page-wrap { padding: 120px 0 100px; }
+
+    .page-header { margin-bottom: 56px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+    .page-eyebrow {
+        display: inline-block; font-size: 12px; font-weight: 500; color: var(--purple);
+        text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 16px;
+    }
+    .page-header h1 { font-size: clamp(32px, 5vw, 48px); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 12px; }
+    .page-header .updated { font-size: 13px; color: var(--text-dim); }
+
+    .policy-section { margin-bottom: 48px; }
+    .policy-section h2 {
+        font-size: 20px; font-weight: 700; letter-spacing: -0.01em;
+        margin-bottom: 16px; color: var(--text);
+        display: flex; align-items: center; gap: 10px;
+    }
+    .policy-section h2::before {
+        content: ''; display: block; width: 3px; height: 20px;
+        background: var(--gradient); border-radius: 2px; flex-shrink: 0;
+    }
+    .policy-section h3 { font-size: 16px; font-weight: 600; color: var(--text); margin: 24px 0 10px; }
+    .policy-section p { color: var(--text-muted); font-size: 15px; margin-bottom: 14px; line-height: 1.75; }
+    .policy-section ul, .policy-section ol { color: var(--text-muted); font-size: 15px; padding-left: 20px; margin-bottom: 14px; }
+    .policy-section li { margin-bottom: 8px; line-height: 1.7; }
+    .policy-section a { color: var(--purple); text-decoration: none; }
+    .policy-section a:hover { text-decoration: underline; }
+
+    .highlight-box {
+        background: rgba(168,85,247,0.06); border: 1px solid rgba(168,85,247,0.2);
+        border-radius: 10px; padding: 20px 24px; margin-bottom: 20px;
+    }
+    .highlight-box p { margin-bottom: 0; color: var(--text); }
+
+    .no-list { list-style: none; padding-left: 0; }
+    .no-list li { display: flex; align-items: flex-start; gap: 10px; }
+    .no-list li::before { content: '✗'; color: #ef4444; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+
+    .yes-list { list-style: none; padding-left: 0; }
+    .yes-list li { display: flex; align-items: flex-start; gap: 10px; }
+    .yes-list li::before { content: '✓'; color: #22c55e; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+
+    /* Third-party table */
+    .services-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 14px; }
+    .services-table th {
+        text-align: left; padding: 10px 14px; background: rgba(255,255,255,0.04);
+        border: 1px solid var(--border); color: var(--text-muted); font-weight: 600;
+        font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .services-table td { padding: 10px 14px; border: 1px solid var(--border); color: var(--text-muted); vertical-align: top; }
+    .services-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+    /* Footer */
+    footer { padding: 40px 0 60px; border-top: 1px solid var(--border); }
+    .footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+    .footer-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text); font-weight: 700; }
+    .footer-logo img { width: 26px; height: 26px; border-radius: 6px; }
+    .footer-copy { font-size: 13px; color: var(--text-dim); }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a { font-size: 13px; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--text); }
+</style>
+</head>
+<body>
+<div class="ambient-bg"></div>
+
+<nav>
+    <div class="nav-inner">
+        <a href="index.html" class="logo">
+            <img src="kliprlogo.png" alt="Klipr" />
+            <span>klipr</span>
+        </a>
+        <a href="index.html" class="nav-back">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+            Back to home
+        </a>
+    </div>
+</nav>
+
+<div class="page-wrap">
+    <div class="container">
+        <div class="page-header">
+            <div class="page-eyebrow">Legal</div>
+            <h1>Privacy Policy</h1>
+            <div class="updated">Last updated: April 17, 2026</div>
+        </div>
+
+        <div class="policy-section">
+            <div class="highlight-box">
+                <p><strong>Short version:</strong> Klipr stores everything locally on your device. We do not have servers that collect your clips, credentials, or personal data. The only things that leave your PC are video uploads to YouTube/TikTok (which you initiate), transcripts sent to generate AI headlines, and license key verification.</p>
+            </div>
+        </div>
+
+        <div class="policy-section">
+            <h2>1. Introduction</h2>
+            <p>Klipr ("we," "our," or "us") is a desktop application that automatically detects viral moments in live streams and creates short-form video clips for upload to social media platforms. This Privacy Policy explains how Klipr collects, uses, stores, and protects information when you use our software.</p>
+            <p>By installing or using Klipr, you agree to the practices described in this Privacy Policy.</p>
+        </div>
+
+        <div class="policy-section">
+            <h2>2. Information We Collect</h2>
+
+            <h3>2.1 Information You Provide Directly</h3>
+            <ul>
+                <li><strong>Account credentials and API keys</strong> — including YouTube OAuth tokens and any API keys you configure within the application. These are stored locally on your device only and are never transmitted to Klipr's servers.</li>
+                <li><strong>Configuration settings</strong> — your preferences, streamer lists, threshold settings, and other bot configuration data. Stored locally in a configuration file on your device.</li>
+            </ul>
+
+            <h3>2.2 Information Collected Automatically</h3>
+            <ul>
+                <li><strong>Stream audio and video</strong> — Klipr temporarily records segments of live streams you have configured it to monitor for the sole purpose of creating clips. These recordings are stored locally on your device. We do not transmit, store, or access this content on any remote server.</li>
+                <li><strong>Chat messages</strong> — Klipr reads public chat messages from Kick.com and Twitch.tv in real time solely to detect viewer engagement spikes. Individual chat messages are not stored, logged, or transmitted. Only aggregate scoring data is processed in memory.</li>
+                <li><strong>Clip metadata</strong> — titles, timestamps, and upload history are stored in a local history log on your device for your reference.</li>
+            </ul>
+
+            <h3>2.3 Information From Third-Party Services</h3>
+            <ul>
+                <li><strong>YouTube</strong> — When you connect your YouTube account, Klipr receives an OAuth access token to upload videos on your behalf. This token is stored locally. Klipr does not access any YouTube data beyond what is required to complete uploads.</li>
+                <li><strong>Groq API</strong> — When you enable automatic headline generation, the audio transcript of a clip is sent to Groq's API to generate a short title. No personally identifiable information is included. Groq's privacy policy governs how they handle this data.</li>
+            </ul>
+        </div>
+
+        <div class="policy-section">
+            <h2>3. How We Use Your Information</h2>
+            <p>Klipr uses the information described above solely for the following purposes:</p>
+            <ul class="yes-list">
+                <li>To detect viral moments in streams you have configured the application to monitor</li>
+                <li>To cut, process, and save video clips to your local device</li>
+                <li>To upload clips to your connected YouTube or TikTok account when you have enabled this feature</li>
+                <li>To generate AI-powered headlines for your clips when you have enabled this feature</li>
+                <li>To maintain a local log of clips and uploads for your personal reference</li>
+            </ul>
+            <p>We do not:</p>
+            <ul class="no-list">
+                <li>Sell, rent, or share your information with any third parties for marketing purposes</li>
+                <li>Access, view, or store your video clips on our servers</li>
+                <li>Access your YouTube channel data beyond uploading videos</li>
+                <li>Use your data to train AI models</li>
+                <li>Transmit your configuration or credentials to any Klipr server</li>
+            </ul>
+        </div>
+
+        <div class="policy-section">
+            <h2>4. YouTube API Services</h2>
+            <p>Klipr uses the YouTube API Services to upload clips to your YouTube channel. By using this feature, you also agree to <a href="https://www.youtube.com/t/terms" target="_blank">YouTube's Terms of Service</a> and <a href="https://policies.google.com/privacy" target="_blank">Google's Privacy Policy</a>.</p>
+            <p>Klipr's use of information received from Google APIs adheres to the <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank">Google API Services User Data Policy</a>, including the Limited Use requirements.</p>
+
+            <h3>Revoking YouTube Access</h3>
+            <p>You can revoke Klipr's access to your YouTube account at any time by:</p>
+            <ol>
+                <li>Visiting <a href="https://myaccount.google.com/permissions" target="_blank">myaccount.google.com/permissions</a></li>
+                <li>Finding "Klipr" in the list of connected apps</li>
+                <li>Clicking "Remove Access"</li>
+            </ol>
+            <p>You may also revoke access locally by deleting the <code style="background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;font-size:13px;">token.json</code> file in your Klipr installation directory.</p>
+        </div>
+
+        <div class="policy-section">
+            <h2>5. Data Storage and Security</h2>
+
+            <h3>5.1 Local Storage</h3>
+            <p>All data collected and processed by Klipr is stored exclusively on your local device. This includes:</p>
+            <ul>
+                <li>Your configuration file (<code style="background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;font-size:13px;">config.py</code>)</li>
+                <li>YouTube OAuth token (<code style="background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;font-size:13px;">token.json</code>)</li>
+                <li>TikTok authentication token (<code style="background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;font-size:13px;">tiktok_token.json</code>)</li>
+                <li>Video clips and processed files (<code style="background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;font-size:13px;">/clips</code> folder)</li>
+                <li>Upload history (<code style="background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;font-size:13px;">upload_history.json</code>)</li>
+            </ul>
+            <p>You are responsible for the security of your local device. We recommend keeping your device secured and not sharing your Klipr installation directory with others.</p>
+
+            <h3>5.2 Third-Party API Transmission</h3>
+            <p>The only data that leaves your device is:</p>
+            <ul>
+                <li>Video files sent to YouTube when you upload a clip (via YouTube API)</li>
+                <li>Video files sent to TikTok when you upload a clip (via TikTok API)</li>
+                <li>Clip audio transcripts sent to Groq's API for headline generation (when enabled)</li>
+                <li>License verification requests sent to our licensing server to validate your Klipr license key</li>
+            </ul>
+
+            <h3>5.3 License Verification</h3>
+            <p>Klipr verifies your license key upon startup. This request includes your license key and is transmitted to our licensing provider (Gumroad) to confirm validity. No other personal data is included in this request.</p>
+        </div>
+
+        <div class="policy-section">
+            <h2>6. Third-Party Services</h2>
+            <p>Klipr integrates with or depends on the following third-party services. Their respective privacy policies govern how they handle any data they receive:</p>
+            <table class="services-table">
+                <thead>
+                    <tr>
+                        <th>Service</th>
+                        <th>Purpose</th>
+                        <th>Privacy Policy</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>YouTube (Google)</td>
+                        <td>Video upload</td>
+                        <td><a href="https://policies.google.com/privacy" target="_blank">policies.google.com/privacy</a></td>
+                    </tr>
+                    <tr>
+                        <td>TikTok</td>
+                        <td>Video upload</td>
+                        <td><a href="https://www.tiktok.com/legal/privacy-policy" target="_blank">tiktok.com/legal/privacy-policy</a></td>
+                    </tr>
+                    <tr>
+                        <td>Groq</td>
+                        <td>AI headline generation</td>
+                        <td><a href="https://groq.com/privacy-policy/" target="_blank">groq.com/privacy-policy</a></td>
+                    </tr>
+                    <tr>
+                        <td>Kick.com</td>
+                        <td>Live stream chat monitoring</td>
+                        <td><a href="https://kick.com/privacy-policy" target="_blank">kick.com/privacy-policy</a></td>
+                    </tr>
+                    <tr>
+                        <td>Twitch.tv</td>
+                        <td>Live stream chat monitoring</td>
+                        <td><a href="https://www.twitch.tv/p/legal/privacy-notice/" target="_blank">twitch.tv/p/legal/privacy-notice</a></td>
+                    </tr>
+                    <tr>
+                        <td>Gumroad</td>
+                        <td>License verification</td>
+                        <td><a href="https://gumroad.com/privacy" target="_blank">gumroad.com/privacy</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="policy-section">
+            <h2>7. Children's Privacy</h2>
+            <p>Klipr is not directed at children under the age of 13. We do not knowingly collect personal information from children under 13. If you believe a child under 13 has provided personal information through our software, please contact us and we will take steps to remove that information.</p>
+        </div>
+
+        <div class="policy-section">
+            <h2>8. Your Rights</h2>
+
+            <h3>8.1 General Rights</h3>
+            <ul>
+                <li><strong>Access</strong> — You may request a copy of any data we hold about you (limited to license and purchase records, as all other data is stored locally on your device)</li>
+                <li><strong>Deletion</strong> — You may request deletion of your account and any associated records</li>
+                <li><strong>Correction</strong> — You may request correction of inaccurate data</li>
+            </ul>
+
+            <h3>8.2 European Users (GDPR)</h3>
+            <p>If you are located in the European Economic Area, you have additional rights under the General Data Protection Regulation including the right to data portability and the right to lodge a complaint with a supervisory authority.</p>
+            <p>Our legal basis for processing data is legitimate interest (operating the software you have installed and paid for) and contractual necessity (fulfilling your license agreement).</p>
+
+            <h3>8.3 California Users (CCPA)</h3>
+            <p>California residents have the right to know what personal information is collected, the right to delete personal information, and the right to opt out of the sale of personal information. Klipr does not sell personal information.</p>
+        </div>
+
+        <div class="policy-section">
+            <h2>9. Data Retention</h2>
+            <p>Since all data is stored locally on your device, you control retention entirely. You may delete your clips, configuration, tokens, and history at any time by removing the relevant files from your Klipr installation directory.</p>
+            <p>Any data held by us (license records) is retained for as long as your license is active and for a reasonable period thereafter for support and accounting purposes.</p>
+        </div>
+
+        <div class="policy-section">
+            <h2>10. Changes to This Privacy Policy</h2>
+            <p>We may update this Privacy Policy from time to time. When we do, we will update the "Last updated" date at the top of this page. Continued use of Klipr after changes are posted constitutes your acceptance of the updated policy.</p>
+        </div>
+
+        <div class="policy-section">
+            <h2>11. Contact Us</h2>
+            <p>If you have any questions, concerns, or requests regarding this Privacy Policy or your data, please contact us at:</p>
+            <div class="highlight-box">
+                <p><strong>Klipr Support</strong><br/>
+                Email: <a href="mailto:support@klipr.app">support@klipr.app</a><br/>
+                Website: <a href="https://klipr.app">klipr.app</a></p>
+            </div>
+            <p style="font-size:13px;color:var(--text-dim);">Klipr is not affiliated with YouTube, Google, Twitch, Kick, or Anthropic.</p>
+        </div>
+
+    </div>
+</div>
+
+<footer>
+    <div class="container footer-inner">
+        <a href="index.html" class="footer-logo">
+            <img src="kliprlogo.png" alt="Klipr" />
+            klipr
+        </a>
+        <div class="footer-copy">© 2026 Klipr. All rights reserved.</div>
+        <div class="footer-links">
+            <a href="terms.html">Terms</a>
+            <a href="privacy.html">Privacy</a>
+            <a href="mailto:support@klipr.app">Contact</a>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>
