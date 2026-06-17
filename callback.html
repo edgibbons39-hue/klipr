@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Klipr — TikTok Authorization</title>
+<link rel="icon" type="image/png" href="kliprlogo.png" />
+<style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+        background: #0a0a0f;
+        color: #fff;
+        font-family: 'Inter', 'Segoe UI', sans-serif;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .card {
+        background: #14141c;
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 20px;
+        padding: 48px 40px;
+        max-width: 520px;
+        width: 90%;
+        text-align: center;
+    }
+    .logo { width: 72px; height: 72px; border-radius: 16px; margin-bottom: 24px; }
+    h1 { font-size: 22px; font-weight: 700; margin-bottom: 10px; }
+    p { color: rgba(255,255,255,0.55); font-size: 15px; line-height: 1.6; margin-bottom: 28px; }
+    .url-box {
+        background: #0a0a0f;
+        border: 1px solid rgba(168,85,247,0.4);
+        border-radius: 10px;
+        padding: 14px 16px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+        color: #a855f7;
+        word-break: break-all;
+        text-align: left;
+        margin-bottom: 20px;
+        cursor: pointer;
+        user-select: all;
+    }
+    .btn {
+        display: inline-block;
+        background: #a855f7;
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        padding: 12px 28px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: opacity 0.15s;
+    }
+    .btn:hover { opacity: 0.85; }
+    .copied { color: #22c55e; font-size: 13px; margin-top: 10px; min-height: 20px; }
+</style>
+</head>
+<body>
+<div class="card">
+    <img src="kliprlogo.png" class="logo" alt="Klipr" />
+    <h1>TikTok Authorization Complete</h1>
+    <p>Copy the full URL from your browser's address bar and paste it back into Klipr to finish connecting your TikTok account.</p>
+    <div class="url-box" id="urlBox">Click to select this page's URL</div>
+    <button class="btn" onclick="copyUrl()">Copy URL</button>
+    <div class="copied" id="copiedMsg"></div>
+</div>
+<script>
+    const box = document.getElementById('urlBox');
+    const msg = document.getElementById('copiedMsg');
+    box.textContent = window.location.href;
+    function copyUrl() {
+        navigator.clipboard.writeText(window.location.href).then(() => {
+            msg.textContent = 'Copied! Paste it into Klipr.';
+            setTimeout(() => msg.textContent = '', 3000);
+        });
+    }
+    box.addEventListener('click', copyUrl);
+</script>
+</body>
+</html>
