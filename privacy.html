@@ -129,7 +129,7 @@
         <div class="page-header">
             <div class="page-eyebrow">Legal</div>
             <h1>Privacy Policy</h1>
-            <div class="updated">Last updated: April 17, 2026</div>
+            <div class="updated">Last updated: July 23, 2026</div>
         </div>
 
         <div class="policy-section">
@@ -216,7 +216,18 @@
             </ul>
             <p>You are responsible for the security of your local device. We recommend keeping your device secured and not sharing your Klipr installation directory with others.</p>
 
-            <h3>5.2 Third-Party API Transmission</h3>
+            <h3>5.2 Protection of Sensitive Data (OAuth Tokens)</h3>
+            <p>YouTube and TikTok OAuth access tokens are the most sensitive data Klipr handles, since they grant permission to act on your connected accounts. We protect this data as follows:</p>
+            <ul>
+                <li><strong>Encryption in transit</strong> — All communication with Google's and TikTok's OAuth and API endpoints uses HTTPS/TLS encryption. Tokens are never sent over an unencrypted connection.</li>
+                <li><strong>No server-side storage</strong> — Klipr has no backend servers. Your tokens are never transmitted to, or stored on, any server operated by us. This eliminates the risk of your credentials being exposed through a breach of our infrastructure, because no such infrastructure holds them.</li>
+                <li><strong>Local file access control</strong> — Tokens are stored only in local files (<code style="background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;font-size:13px;">token.json</code>, <code style="background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;font-size:13px;">tiktok_token.json</code>) inside your Klipr installation folder, protected by your operating system's standard file permissions — accessible only to your own Windows user account.</li>
+                <li><strong>Minimum necessary scope</strong> — Klipr requests only the narrow permissions required to upload videos and read upload statistics (<code style="background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;font-size:13px;">youtube.upload</code>, <code style="background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;font-size:13px;">youtube.readonly</code>) — never broader account, email, or contacts access.</li>
+                <li><strong>No token logging</strong> — Application logs record that an upload occurred, never the token value itself. Token contents are never printed, logged, or included in error reports.</li>
+                <li><strong>Instant revocation</strong> — You can revoke a token's access at any time, either from the platform's own account settings (see Section 4) or by deleting the local token file, which immediately and permanently removes Klipr's access.</li>
+            </ul>
+
+            <h3>5.3 Third-Party API Transmission</h3>
             <p>The only data that leaves your device is:</p>
             <ul>
                 <li>Video files sent to YouTube when you upload a clip (via YouTube API)</li>
@@ -225,7 +236,7 @@
                 <li>License verification requests sent to our licensing server to validate your Klipr license key</li>
             </ul>
 
-            <h3>5.3 License Verification</h3>
+            <h3>5.4 License Verification</h3>
             <p>Klipr verifies your license key upon startup. This request includes your license key and is transmitted to our licensing provider (Gumroad) to confirm validity. No other personal data is included in this request.</p>
         </div>
 
