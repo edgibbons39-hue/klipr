@@ -1,6 +1,10 @@
 {
-  "version": "2.0",
-  "kind": "full",
-  "notes": "",
-  "installer_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.0/Klipr_Setup.exe"
+  "version": "2.3",
+  "notes": "Security hardening, crash fixes, TikTok sign-in moved server-side",
+  "released": "2026-08-09",
+  "installer_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.3/Klipr_Setup.exe",
+  "kind": "patch",
+  "patch_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.3/klipr_patch_2.3.zip",
+  "patch_sha256": "30bf31a40839814935966b5a4d3d960f4c98389800702cb3dd2842f02ae2a750",
+  "installer_sha256": "e279793d3373ae1146fb5dd918c12f63df4988e4792fab31ff18a2ea3af44294"
 }
