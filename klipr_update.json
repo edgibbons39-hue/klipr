@@ -1,10 +1,6 @@
 {
-  "version": "2.1",
-  "notes": "Checks for updates while running",
-  "released": "2026-08-08",
-  "installer_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.1/Klipr_Setup.exe",
-  "kind": "patch",
-  "patch_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.1/klipr_patch_2.1.zip",
-  "patch_sha256": "e4ecf50044b2e1cae0bf9767d1462306526cc8d17ed28e379cca778090e4770b",
-  "min_version": "2.0"
+  "version": "2.0",
+  "kind": "full",
+  "notes": "",
+  "installer_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.0/Klipr_Setup.exe"
 }
