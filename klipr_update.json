@@ -1,10 +1,8 @@
 {
-  "version": "2.3",
-  "notes": "Security hardening, crash fixes, TikTok sign-in moved server-side",
+  "version": "2.4",
+  "notes": "Fixes random startup crashes caused by antivirus interfering with the temp folder",
   "released": "2026-08-09",
-  "installer_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.3/Klipr_Setup.exe",
-  "kind": "patch",
-  "patch_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.3/klipr_patch_2.3.zip",
-  "patch_sha256": "30bf31a40839814935966b5a4d3d960f4c98389800702cb3dd2842f02ae2a750",
-  "installer_sha256": "e279793d3373ae1146fb5dd918c12f63df4988e4792fab31ff18a2ea3af44294"
+  "installer_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.4/Klipr_Setup.exe",
+  "kind": "full",
+  "installer_sha256": "fadd358f6c27617fa501b96ea31aee6bc16fe9060d089f9641c89559be739298"
 }
