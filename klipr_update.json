@@ -1,8 +1,10 @@
 {
-  "version": "2.4",
-  "notes": "Fixes random startup crashes caused by antivirus interfering with the temp folder",
-  "released": "2026-08-09",
-  "installer_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.4/Klipr_Setup.exe",
-  "kind": "full",
-  "installer_sha256": "fadd358f6c27617fa501b96ea31aee6bc16fe9060d089f9641c89559be739298"
+  "version": "2.5",
+  "notes": "Waits for memory instead of crashing, warns when rendering falls behind, shows upload quota and TikTok sign-in status",
+  "released": "2026-08-10",
+  "installer_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.5/Klipr_Setup.exe",
+  "kind": "patch",
+  "patch_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.5/klipr_patch_2.5.zip",
+  "patch_sha256": "a354665cd08f8d44f8211687fc0f936032be162ea4fe35874c37583726877a31",
+  "installer_sha256": "2d7da66ec7752c568ba5a75e3b73996b4760aff485f868171a3b28e250233f06"
 }
