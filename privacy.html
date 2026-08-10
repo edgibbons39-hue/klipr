@@ -176,7 +176,7 @@
                 <li>Whether initial setup (Google/Groq connection) has been completed</li>
                 <li>The error code of the most recent upload failure, if any (e.g. "rate_limit_exceeded") — never the full error message or any content related to it</li>
             </ul>
-            <p>This report never includes clip video/audio, streamer names or URLs, chat content, file paths, OAuth tokens, API keys, or any other credentials. You can turn this off at any time by unchecking "Help Improve Klipr" in Settings and clicking Save — no further reports are sent once it's disabled.</p>
+            <p>This report never includes clip video/audio, streamer names or URLs, chat content, file paths, OAuth tokens, API keys, or any other credentials. You can turn this off at any time by unchecking "Help Improve Klipr" in Settings and clicking Save — no further reports are sent once it's disabled. This describes the diagnostic report only — license verification is separate, is required, and is described in Section 5.4.</p>
         </div>
 
         <div class="policy-section">
@@ -249,8 +249,28 @@
                 <li>The diagnostic report described in Section 2.4, unless you've turned it off</li>
             </ul>
 
-            <h3>5.4 License Verification</h3>
-            <p>Klipr verifies your license key upon startup. This request includes your license key and is transmitted to our licensing provider (Gumroad) to confirm validity. No other personal data is included in this request.</p>
+            <h3>5.4 License Verification and Anti-Piracy</h3>
+            <p>Klipr verifies your license key when it starts and periodically while it is
+            running. This request is transmitted to our licensing provider (Gumroad) and to
+            Klipr's own licensing service, and includes:</p>
+            <ul>
+                <li>Your license key and subscription status</li>
+                <li>A one-way hashed identifier for your device</li>
+                <li>Hardware serial numbers from your computer (disk drive, motherboard and processor)</li>
+                <li>Your IP address, which is recorded by our server when the request arrives</li>
+                <li>Your Klipr version</li>
+            </ul>
+            <p><strong>Why we collect this.</strong> A Klipr license is for one person. These
+            details let us identify a single license being used across many computers, and block
+            installations that share or resell license keys.</p>
+            <p><strong>This is required and cannot be turned off</strong> while you are using a
+            licensed copy of Klipr. It is separate from the optional diagnostic reporting
+            described in Section 2.4, which you can disable at any time.</p>
+            <p><strong>How long we keep it.</strong> These records are retained for 12 months.
+            Where a license has been blocked for misuse, they are retained for as long as that
+            block remains in force.</p>
+            <p>We do not sell this information, use it for advertising, or combine it with data
+            obtained from other sources.</p>
         </div>
 
         <div class="policy-section">
