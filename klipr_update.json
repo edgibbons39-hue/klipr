@@ -1,10 +1,10 @@
 {
-  "version": "2.6",
-  "notes": "Licence checks now detect keys shared across machines",
+  "version": "2.7",
+  "notes": "Buffer files moved out of the clips folder and cleaned up, frees memory between clips, warns if a PC cannot keep up",
   "released": "2026-08-10",
-  "installer_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.6/Klipr_Setup.exe",
+  "installer_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.7/Klipr_Setup.exe",
   "kind": "patch",
-  "patch_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.6/klipr_patch_2.6.zip",
-  "patch_sha256": "7ec483d608bf126511cf6746f22bc9c99b1fb3e2b93d07a3417de8e2ff1cb258",
-  "installer_sha256": "87d32a8831280759511ca2071d80a79a6ffc63957603cb65c328573989661dc8"
+  "patch_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.7/klipr_patch_2.7.zip",
+  "patch_sha256": "927151373b78dd5ef52859fb4cb508270ecf730bc6637ab0c3c30136dcf52753",
+  "installer_sha256": "60f50b9285c6aa2eb5d6dc0cac084051c71fc127a5610033f89a9c0977c82416"
 }
