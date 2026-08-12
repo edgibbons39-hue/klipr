@@ -1,10 +1,10 @@
 {
-  "version": "2.7",
-  "notes": "Buffer files moved out of the clips folder and cleaned up, frees memory between clips, warns if a PC cannot keep up",
-  "released": "2026-08-10",
-  "installer_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.7/Klipr_Setup.exe",
+  "version": "2.8",
+  "notes": "Updates that cannot be applied while Klipr is open now finish after it closes",
+  "released": "2026-08-12",
+  "installer_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.8/Klipr_Setup.exe",
   "kind": "patch",
-  "patch_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.7/klipr_patch_2.7.zip",
-  "patch_sha256": "927151373b78dd5ef52859fb4cb508270ecf730bc6637ab0c3c30136dcf52753",
-  "installer_sha256": "60f50b9285c6aa2eb5d6dc0cac084051c71fc127a5610033f89a9c0977c82416"
+  "patch_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.8/klipr_patch_2.8.zip",
+  "patch_sha256": "1015101c974c7bd13db943e5591739fcc0940e8ffea097977edd7673b3a738d2",
+  "installer_sha256": "1f94ec8518376b3d9ac6f8ef327e010d868341ea6a874f1b3d2a4b73f3276fc1"
 }
