@@ -1,10 +1,10 @@
 {
-  "version": "2.9",
-  "notes": "TikTok posting removed \u2014 Klipr now focuses entirely on YouTube Shorts",
-  "released": "2026-08-17",
-  "installer_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.9/Klipr_Setup.exe",
+  "version": "2.10",
+  "notes": "Full stream recording (optional), tighter plan enforcement, clearer YouTube sign-in errors",
+  "released": "2026-08-18",
+  "installer_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.10/Klipr_Setup.exe",
   "kind": "patch",
-  "patch_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.9/klipr_patch_2.9.zip",
-  "patch_sha256": "b00bd6a7debd76e58b95e42759bb8314db435b38b28d092ab5b8fc22f8363f46",
-  "installer_sha256": "4fd67834aeaf2ffad67d116b02056b546eb7c64c6b7519222d198ebe11524f72"
+  "patch_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.10/klipr_patch_2.10.zip",
+  "patch_sha256": "f7edacdb460e8b5295fee7d7265afcd950eaf83c4a36ce71f94ca29d50535d0a",
+  "installer_sha256": "4ce689f91c97794693f3c91c630064249f525668dcb5382908deefbb8f1fe6b0"
 }
