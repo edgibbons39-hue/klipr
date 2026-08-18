@@ -1,10 +1,10 @@
 {
-  "version": "2.8",
-  "notes": "Updates that cannot be applied while Klipr is open now finish after it closes",
-  "released": "2026-08-12",
-  "installer_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.8/Klipr_Setup.exe",
+  "version": "2.9",
+  "notes": "TikTok posting removed \u2014 Klipr now focuses entirely on YouTube Shorts",
+  "released": "2026-08-17",
+  "installer_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.9/Klipr_Setup.exe",
   "kind": "patch",
-  "patch_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.8/klipr_patch_2.8.zip",
-  "patch_sha256": "1015101c974c7bd13db943e5591739fcc0940e8ffea097977edd7673b3a738d2",
-  "installer_sha256": "1f94ec8518376b3d9ac6f8ef327e010d868341ea6a874f1b3d2a4b73f3276fc1"
+  "patch_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.9/klipr_patch_2.9.zip",
+  "patch_sha256": "b00bd6a7debd76e58b95e42759bb8314db435b38b28d092ab5b8fc22f8363f46",
+  "installer_sha256": "4fd67834aeaf2ffad67d116b02056b546eb7c64c6b7519222d198ebe11524f72"
 }
