@@ -129,12 +129,12 @@
         <div class="page-header">
             <div class="page-eyebrow">Legal</div>
             <h1>Privacy Policy</h1>
-            <div class="updated">Last updated: August 4, 2026</div>
+            <div class="updated">Last updated: August 18, 2026</div>
         </div>
 
         <div class="policy-section">
             <div class="highlight-box">
-                <p><strong>Short version:</strong> Klipr stores everything locally on your device. We do not have servers that collect your clips, credentials, or personal data. The only things that leave your PC are video uploads to YouTube/TikTok (which you initiate), transcripts sent to generate AI headlines, and license key verification.</p>
+                <p><strong>Short version:</strong> Klipr stores everything locally on your device. We do not have servers that collect your clips, credentials, or personal data. The only things that leave your PC are video uploads to YouTube (which you initiate), transcripts sent to generate AI headlines, and license key verification.</p>
             </div>
         </div>
 
@@ -172,7 +172,7 @@
                 <li>A one-way hashed device identifier (the same non-reversible hash used for license validation — not your name, IP address, or hardware serial numbers)</li>
                 <li>Your Klipr app version</li>
                 <li>Whether your license/subscription is currently active</li>
-                <li>YouTube and TikTok upload quota usage (numbers only, e.g. "3 of 6 used today")</li>
+                <li>YouTube upload quota usage (numbers only, e.g. "3 of 6 used today")</li>
                 <li>Whether initial setup (Google/Groq connection) has been completed</li>
                 <li>The error code of the most recent upload failure, if any (e.g. "rate_limit_exceeded") — never the full error message or any content related to it</li>
             </ul>
@@ -185,7 +185,7 @@
             <ul class="yes-list">
                 <li>To detect viral moments in streams you have configured the application to monitor</li>
                 <li>To cut, process, and save video clips to your local device</li>
-                <li>To upload clips to your connected YouTube or TikTok account when you have enabled this feature</li>
+                <li>To upload clips to your connected YouTube account when you have enabled this feature</li>
                 <li>To generate AI-powered headlines for your clips when you have enabled this feature</li>
                 <li>To maintain a local log of clips and uploads for your personal reference</li>
             </ul>
@@ -222,18 +222,17 @@
             <ul>
                 <li>Your configuration file (<code style="background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;font-size:13px;">config.py</code>)</li>
                 <li>YouTube OAuth token (<code style="background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;font-size:13px;">token.json</code>)</li>
-                <li>TikTok authentication token (<code style="background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;font-size:13px;">tiktok_token.json</code>)</li>
                 <li>Video clips and processed files (<code style="background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;font-size:13px;">/clips</code> folder)</li>
                 <li>Upload history (<code style="background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;font-size:13px;">upload_history.json</code>)</li>
             </ul>
             <p>You are responsible for the security of your local device. We recommend keeping your device secured and not sharing your Klipr installation directory with others.</p>
 
             <h3>5.2 Protection of Sensitive Data (OAuth Tokens)</h3>
-            <p>YouTube and TikTok OAuth access tokens are the most sensitive data Klipr handles, since they grant permission to act on your connected accounts. We protect this data as follows:</p>
+            <p>Your YouTube OAuth access token is the most sensitive data Klipr handles, since it grants permission to act on your connected account. We protect this data as follows:</p>
             <ul>
-                <li><strong>Encryption in transit</strong> — All communication with Google's and TikTok's OAuth and API endpoints uses HTTPS/TLS encryption. Tokens are never sent over an unencrypted connection.</li>
+                <li><strong>Encryption in transit</strong> — All communication with Google's OAuth and API endpoints uses HTTPS/TLS encryption. Tokens are never sent over an unencrypted connection.</li>
                 <li><strong>No server-side storage</strong> — Klipr has no backend servers. Your tokens are never transmitted to, or stored on, any server operated by us. This eliminates the risk of your credentials being exposed through a breach of our infrastructure, because no such infrastructure holds them.</li>
-                <li><strong>Local file access control</strong> — Tokens are stored only in local files (<code style="background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;font-size:13px;">token.json</code>, <code style="background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;font-size:13px;">tiktok_token.json</code>) inside your Klipr installation folder, protected by your operating system's standard file permissions — accessible only to your own Windows user account.</li>
+                <li><strong>Local file access control</strong> — Your token is stored only in a local file (<code style="background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;font-size:13px;">token.json</code>) inside your Klipr installation folder, protected by your operating system's standard file permissions — accessible only to your own Windows user account.</li>
                 <li><strong>Minimum necessary scope</strong> — Klipr requests only the narrow permissions required to upload videos and read upload statistics (<code style="background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;font-size:13px;">youtube.upload</code>, <code style="background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;font-size:13px;">youtube.readonly</code>) — never broader account, email, or contacts access.</li>
                 <li><strong>No token logging</strong> — Application logs record that an upload occurred, never the token value itself. Token contents are never printed, logged, or included in error reports.</li>
                 <li><strong>Instant revocation</strong> — You can revoke a token's access at any time, either from the platform's own account settings (see Section 4) or by deleting the local token file, which immediately and permanently removes Klipr's access.</li>
@@ -243,7 +242,6 @@
             <p>The only data that leaves your device is:</p>
             <ul>
                 <li>Video files sent to YouTube when you upload a clip (via YouTube API)</li>
-                <li>Video files sent to TikTok when you upload a clip (via TikTok API)</li>
                 <li>Clip audio transcripts sent to Groq's API for headline generation (when enabled)</li>
                 <li>License verification requests sent to our licensing server to validate your Klipr license key</li>
                 <li>The diagnostic report described in Section 2.4, unless you've turned it off</li>
@@ -289,11 +287,6 @@
                         <td>YouTube (Google)</td>
                         <td>Video upload</td>
                         <td><a href="https://policies.google.com/privacy" target="_blank">policies.google.com/privacy</a></td>
-                    </tr>
-                    <tr>
-                        <td>TikTok</td>
-                        <td>Video upload</td>
-                        <td><a href="https://www.tiktok.com/legal/privacy-policy" target="_blank">tiktok.com/legal/privacy-policy</a></td>
                     </tr>
                     <tr>
                         <td>Groq</td>

@@ -133,7 +133,7 @@
         <div class="page-header">
             <div class="page-eyebrow">Security</div>
             <h1>Exactly what Klipr can<br/>and cannot do to your accounts.</h1>
-            <p>You're giving a background app access to your YouTube and TikTok. You deserve a straight answer on what that means — not buried in a privacy policy.</p>
+            <p>You're giving a background app access to your YouTube channel. You deserve a straight answer on what that means — not buried in a privacy policy.</p>
         </div>
 
         <!-- Quick answer cards -->
@@ -143,7 +143,7 @@
                 <div class="answer-icon">🔐</div>
                 <div class="big-answer">Never.</div>
                 <h3>Are your credentials sent to Klipr's servers?</h3>
-                <p>Your YouTube OAuth token, TikTok token, and all API keys are stored exclusively in files on your own PC. Klipr has no server that receives or stores them. We literally cannot see them.</p>
+                <p>Your YouTube OAuth token and all API keys are stored exclusively in files on your own PC. Klipr has no server that receives or stores them. We literally cannot see them.</p>
             </div>
             <div class="answer-card">
                 <div class="answer-icon">📁</div>
@@ -167,7 +167,7 @@
                 <div class="answer-icon">💀</div>
                 <div class="big-answer">Nothing breaks.</div>
                 <h3>What happens if Klipr shuts down?</h3>
-                <p>Your YouTube and TikTok accounts continue working exactly as they did before. Your accounts don't depend on us — the clipping, editing and uploading all happen on your PC, using tokens stored on your PC. Klipr does run two small services of its own: one that signs you in to TikTok, and one that checks your license. If we shut down tomorrow those would stop, but you revoke OAuth access, uninstall, and your channels are completely unaffected. Your videos stay up. Your subscribers stay. Nothing is tied to our infrastructure.</p>
+                <p>Your YouTube channel continues working exactly as it did before. Your account doesn't depend on us — the clipping, editing and uploading all happen on your PC, using a token stored on your PC. Klipr does run one small service of its own, which checks your license. If we shut down tomorrow that would stop, but you revoke OAuth access, uninstall, and your channel is completely unaffected. Your videos stay up. Your subscribers stay. Nothing is tied to our infrastructure.</p>
             </div>
         </div>
 
@@ -219,13 +219,6 @@
             </li>
             <li class="file-item">
                 <div style="flex:1">
-                    <div class="file-name">tiktok_token.json</div>
-                    <div class="file-desc">Your TikTok access token. Same principle — delete it to disconnect TikTok immediately.</div>
-                </div>
-                <div><span class="file-local">Local only</span></div>
-            </li>
-            <li class="file-item">
-                <div style="flex:1">
                     <div class="file-name">config.py</div>
                     <div class="file-desc">Your settings — streamer list, thresholds, upload preferences. No credentials stored here, only configuration values.</div>
                 </div>
@@ -241,7 +234,7 @@
             <li class="file-item">
                 <div style="flex:1">
                     <div class="file-name">clips/</div>
-                    <div class="file-desc">The actual video files — raw clips and processed vertical versions. Stored on your hard drive until you delete them. Never uploaded anywhere except to YouTube/TikTok when you explicitly enable auto-upload.</div>
+                    <div class="file-desc">The actual video files — raw clips and processed vertical versions. Stored on your hard drive until you delete them. Never uploaded anywhere except to YouTube when you explicitly enable auto-upload.</div>
                 </div>
                 <div><span class="file-local">Local only</span></div>
             </li>
@@ -264,7 +257,6 @@
             <li class="cant-item">Read your subscriber list or any private channel data</li>
             <li class="cant-item">Access your YouTube Studio settings or channel configuration</li>
             <li class="cant-item">Post to YouTube on your behalf without the app running on your PC</li>
-            <li class="cant-item">Access any TikTok data beyond uploading videos</li>
             <li class="cant-item">Read your Kick or Twitch account credentials — it only monitors public stream chat</li>
             <li class="cant-item">Transmit your clips or recordings to any Klipr server — they stay on your PC</li>
         </ul>
@@ -293,8 +285,6 @@
 
         <p style="color:var(--text-muted);font-size:14px;margin-bottom:48px;">Or simply delete <span style="font-family:monospace;font-size:12px;color:var(--purple);">token.json</span> from your Klipr installation folder. The effect is immediate — Klipr loses all YouTube access on next launch and will prompt you to reconnect if you want to restore it.</p>
 
-        <p style="color:var(--text-muted);font-size:15px;margin-bottom:24px;"><strong style="color:var(--text);">TikTok:</strong> Delete <span style="font-family:monospace;font-size:12px;color:var(--purple);">tiktok_token.json</span> from your installation folder, or revoke access through TikTok's app settings under <strong>Settings → Security → Connected Apps</strong>.</p>
-
         <div class="divider"></div>
 
         <!-- What does leave your PC -->
@@ -303,7 +293,7 @@
             <div class="answer-card">
                 <div class="answer-icon">📤</div>
                 <h3>Video uploads</h3>
-                <p>When auto-upload is enabled, clip files are sent directly to YouTube or TikTok via their official APIs. This goes straight from your PC to the platform — not through any Klipr server.</p>
+                <p>When auto-upload is enabled, clip files are sent directly to YouTube via its official API. This goes straight from your PC to the platform — not through any Klipr server.</p>
             </div>
             <div class="answer-card">
                 <div class="answer-icon">🤖</div>
