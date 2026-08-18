@@ -1,10 +1,10 @@
 {
-  "version": "2.10",
-  "notes": "Full stream recording (optional), tighter plan enforcement, clearer YouTube sign-in errors",
+  "version": "2.11",
+  "notes": "Headline now appears on clips with no speech; capture stops cleanly on low disk",
   "released": "2026-08-18",
-  "installer_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.10/Klipr_Setup.exe",
+  "installer_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.11/Klipr_Setup.exe",
   "kind": "patch",
-  "patch_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.10/klipr_patch_2.10.zip",
-  "patch_sha256": "f7edacdb460e8b5295fee7d7265afcd950eaf83c4a36ce71f94ca29d50535d0a",
-  "installer_sha256": "4ce689f91c97794693f3c91c630064249f525668dcb5382908deefbb8f1fe6b0"
+  "patch_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.11/klipr_patch_2.11.zip",
+  "patch_sha256": "39117104df23a72ab11908679f91bc2567ff626ae8335dfc8e3db971a9d12d8d",
+  "installer_sha256": "43f1952ea9b2fa49c5fc57004821197158eea3ad63a0d6d116e8a2a647aa9dbd"
 }
