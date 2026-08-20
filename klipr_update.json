@@ -1,10 +1,10 @@
 {
-  "version": "2.11",
-  "notes": "Headline now appears on clips with no speech; capture stops cleanly on low disk",
-  "released": "2026-08-18",
-  "installer_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.11/Klipr_Setup.exe",
+  "version": "2.12",
+  "notes": "Fixes AI headlines, which had stopped working entirely",
+  "released": "2026-08-20",
+  "installer_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.12/Klipr_Setup.exe",
   "kind": "patch",
-  "patch_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.11/klipr_patch_2.11.zip",
-  "patch_sha256": "39117104df23a72ab11908679f91bc2567ff626ae8335dfc8e3db971a9d12d8d",
-  "installer_sha256": "43f1952ea9b2fa49c5fc57004821197158eea3ad63a0d6d116e8a2a647aa9dbd"
+  "patch_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.12/klipr_patch_2.12.zip",
+  "patch_sha256": "14e89fd4e5ee10e3ec477e4539bee3ca93a202b57a565326cea6afe2b4953a59",
+  "installer_sha256": "d67b2a1efdffca0628a9ea819cc7f892d3bcd4696e809204ecc3a8f88c9efe0f"
 }
