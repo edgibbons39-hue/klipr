@@ -6,5 +6,6 @@
   "kind": "patch",
   "patch_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.12/klipr_patch_2.12.zip",
   "patch_sha256": "14e89fd4e5ee10e3ec477e4539bee3ca93a202b57a565326cea6afe2b4953a59",
-  "installer_sha256": "d67b2a1efdffca0628a9ea819cc7f892d3bcd4696e809204ecc3a8f88c9efe0f"
+  "installer_sha256": "d67b2a1efdffca0628a9ea819cc7f892d3bcd4696e809204ecc3a8f88c9efe0f",
+  "min_version": "2.5"
 }
