@@ -1,10 +1,10 @@
 {
-  "version": "2.13",
-  "notes": "Redesigned interface, new Mini Live Monitor, and the taste-learning system now actually learns",
+  "version": "2.14",
+  "notes": "Klipr 2.14 \u2014 Streamers, AI Review and Settings redesigned\n\n**Streamers**\n- Every streamer now has its own ACTIVE switch. On means Klipr watches that\n  channel, off pauses just that one without removing it or losing its custom\n  threshold. The old Pause/Resume button at the bottom is gone.\n- Rebuilt as a proper table: live indicator, platform and status badges,\n  threshold and URL. Double-click a row to edit its threshold, as before.\n- Your selection now survives the two-minute live-status refresh instead of\n  clearing itself mid-click.\n\n**AI Review**\n- The selected clip panel is permanent. It used to appear only after you\n  clicked a row, so the page jumped every time the selection changed.\n- Upload Schedule is now a single card: enable switch, posting window, and\n  the daily cap.\n- Queue rows show the headline first, with streamer, chat score, AI score and\n  the scheduled time underneath. Statuses are spelled out rather than cut off\n  mid-word.\n- Fixed: editing a headline on a clip that had no upload time yet crashed the\n  page loader and blanked the entire queue. The clip was fine; the list just\n  stopped drawing.\n\n**Settings**\n- Reorganised into numbered cards across two columns, with each control\n  labelled above rather than squeezed beside a long name.\n- Save Changes is now pinned to the bottom of the page instead of sitting at\n  the end of a long scroll.\n- New: Reset Defaults. It loads Klipr's shipped defaults into the form and\n  saves nothing until you press Save Changes, so a misclick costs a page\n  refresh rather than your configuration. It leaves your Groq key alone.\n- The session-recording disk note now sits with the session-recording setting\n  instead of several sections away.\n\n**Window sizing**\n- Klipr now opens at 1280x720 so Settings shows both columns, and will not\n  shrink below 1060x700 \u2014 under that, some controls had nowhere to render.",
   "released": "2026-08-20",
-  "installer_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.13/Klipr_Setup.exe",
+  "installer_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.14/Klipr_Setup.exe",
   "kind": "patch",
-  "patch_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.13/klipr_patch_2.13.zip",
-  "patch_sha256": "4324fc5b9adb266b86e83c3ff6a5b7daf2cee41ae36057968daa84b21ddea1e3",
-  "installer_sha256": "9fe6c4deede4aceb8a7967b2720c6415ca77d5f61b7762dd4418c7cf908a29df"
+  "patch_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.14/klipr_patch_2.14.zip",
+  "patch_sha256": "f4cdd02450a53dee4f738be1715c630cf98807b1f729f4ebf66f0ae6b4a6e24c",
+  "installer_sha256": "5ff1ab64aff5d4773e74eac996c4e2b4dd91e9a518a5f78c97c3f3e9cbc5a69c"
 }
