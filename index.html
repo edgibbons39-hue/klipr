@@ -787,5 +787,163 @@ footer{border-top:1px solid var(--border);padding:56px 0 40px;margin-top:24px}
 })();
 </script>
 
+<!-- ── One-question survey + PC link capture ─────────────────────────────── -->
+<style>
+  #kq-wrap{position:fixed;inset:0;z-index:9999;display:none;align-items:flex-end;justify-content:center;padding:18px}
+  #kq-wrap.on{display:flex}
+  @media(min-width:640px){#kq-wrap{align-items:center}}
+  #kq-veil{position:absolute;inset:0;background:rgba(5,5,10,.72);backdrop-filter:blur(3px)}
+  #kq{position:relative;width:100%;max-width:440px;background:#12121c;border:1px solid var(--border-lit);
+      border-radius:var(--r-lg);padding:26px 24px 22px;box-shadow:0 24px 60px -20px rgba(0,0,0,.8)}
+  #kq .kq-badge{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.14em;
+      text-transform:uppercase;color:var(--violet);background:rgba(168,85,247,.12);
+      padding:5px 10px;border-radius:999px;margin-bottom:14px}
+  #kq h3{font-family:var(--display);font-size:21px;line-height:1.2;margin:0 0 6px;color:var(--text)}
+  #kq p{font-size:14px;line-height:1.55;color:var(--muted);margin:0 0 16px}
+  #kq-x{position:absolute;top:14px;right:16px;background:none;border:0;color:var(--faint);
+      font-size:20px;line-height:1;cursor:pointer;padding:4px 6px;border-radius:8px}
+  #kq-x:hover{color:var(--text)}
+  .kq-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+  .kq-chip{font-family:var(--body);font-size:13px;color:var(--muted);background:#1a1a27;
+      border:1px solid var(--border);border-radius:999px;padding:8px 14px;cursor:pointer;transition:.15s}
+  .kq-chip:hover{border-color:var(--border-lit);color:var(--text)}
+  .kq-chip[aria-pressed="true"]{background:var(--grad);border-color:transparent;color:#fff}
+  #kq input{width:100%;background:#1a1a27;border:1px solid var(--border);border-radius:10px;
+      padding:11px 13px;color:var(--text);font-family:var(--body);font-size:14px;margin-bottom:10px}
+  #kq input::placeholder{color:var(--faint)}
+  #kq input:focus{outline:none;border-color:var(--violet-dim)}
+  #kq-go,#kq-go2{width:100%;background:var(--grad);border:0;border-radius:10px;padding:13px;color:#fff;
+      font-family:var(--display);font-size:15px;font-weight:600;cursor:pointer}
+  #kq-go[disabled]{opacity:.45;cursor:default}
+  #kq-skip{display:block;width:100%;background:none;border:0;color:var(--faint);font-size:12.5px;
+      margin-top:10px;cursor:pointer;font-family:var(--body)}
+  #kq-skip:hover{color:var(--muted)}
+  #kq-note{font-size:11.5px;color:var(--faint);margin:10px 0 0;line-height:1.5}
+  #kq-done{text-align:center}
+  #kq-code{font-family:var(--mono);font-size:22px;letter-spacing:.1em;color:var(--text);
+      background:#1a1a27;border:1px dashed var(--border-lit);border-radius:12px;padding:16px;margin:14px 0}
+  @media(prefers-reduced-motion:no-preference){
+    #kq{animation:kqin .25s ease}
+    @keyframes kqin{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  }
+</style>
+
+<div id="kq-wrap" role="dialog" aria-modal="true" aria-labelledby="kq-title">
+  <div id="kq-veil"></div>
+  <div id="kq">
+    <button id="kq-x" aria-label="Close">&times;</button>
+
+    <div id="kq-ask">
+      <span class="kq-badge">10% off &middot; one question</span>
+      <h3 id="kq-title">How did you hear about Klipr?</h3>
+      <p>Genuinely helps me work out where to spend my time. One tap and the code is yours.</p>
+
+      <div class="kq-chips" id="kq-chips">
+        <button class="kq-chip" data-v="TikTok" aria-pressed="false">TikTok</button>
+        <button class="kq-chip" data-v="Instagram" aria-pressed="false">Instagram</button>
+        <button class="kq-chip" data-v="YouTube" aria-pressed="false">YouTube</button>
+        <button class="kq-chip" data-v="Discord" aria-pressed="false">Discord</button>
+        <button class="kq-chip" data-v="A friend" aria-pressed="false">A friend</button>
+        <button class="kq-chip" data-v="Google" aria-pressed="false">Google</button>
+        <button class="kq-chip" data-v="Other" aria-pressed="false">Somewhere else</button>
+      </div>
+
+      <input id="kq-other" type="text" placeholder="Where exactly? (optional)" style="display:none">
+      <input id="kq-email" type="email" placeholder="Email (optional) &mdash; we&rsquo;ll send the link for your PC">
+      <button id="kq-go" disabled>Get my code</button>
+      <button id="kq-skip">No thanks</button>
+      <p id="kq-note">Klipr runs on Windows, so if you&rsquo;re on your phone, leave your email and
+        we&rsquo;ll send the download link for when you&rsquo;re at your PC. No newsletter, no spam.</p>
+    </div>
+
+    <div id="kq-done" style="display:none">
+      <span class="kq-badge">Thanks</span>
+      <h3>Here&rsquo;s your 10% off</h3>
+      <p>Enter it at checkout.</p>
+      <div id="kq-code">KLIPR10</div>
+      <button id="kq-go2">Take me to the plans</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var CODE   = 'KLIPR10';
+  var SB_URL = 'https://kcmypumbsdmqsuaacxdp.supabase.co/rest/v1/signups';
+  var SB_KEY = 'sb_publishable_1NyOJ8dhBpDrcgwY5bzSMA_OhmIoUyi';
+  var KEY    = 'klipr_survey_v1';
+
+  var wrap = document.getElementById('kq-wrap');
+  if(!wrap) return;
+  try{ if(localStorage.getItem(KEY)) return; }catch(e){}
+
+  var picked = null, shown = false;
+  var other  = document.getElementById('kq-other');
+  var email  = document.getElementById('kq-email');
+  var go     = document.getElementById('kq-go');
+
+  function show(){
+    if(shown) return;
+    shown = true;
+    wrap.classList.add('on');
+    var f = wrap.querySelector('.kq-chip');
+    if(f) f.focus();
+  }
+  function close(){
+    wrap.classList.remove('on');
+    try{ localStorage.setItem(KEY,'1'); }catch(e){}
+  }
+
+  /* Late enough not to interrupt, early enough to catch a bounce. */
+  var t = setTimeout(show, 14000);
+  window.addEventListener('scroll', function(){
+    if(window.scrollY > window.innerHeight * 0.5){ clearTimeout(t); show(); }
+  }, {passive:true});
+
+  document.getElementById('kq-chips').addEventListener('click', function(ev){
+    var b = ev.target.closest('.kq-chip');
+    if(!b) return;
+    [].forEach.call(this.querySelectorAll('.kq-chip'), function(c){
+      c.setAttribute('aria-pressed', String(c === b));
+    });
+    picked = b.dataset.v;
+    other.style.display = (picked === 'Other') ? 'block' : 'none';
+    go.disabled = false;
+  });
+
+  function send(){
+    var answer = picked === 'Other' && other.value.trim()
+      ? 'Other: ' + other.value.trim() : picked;
+    var body = {heard_from: answer, page: location.pathname};
+    var em = email.value.trim();
+    if(em) body.email = em;
+    /* keepalive so the write survives the click-through to checkout */
+    try{
+      fetch(SB_URL, {method:'POST', keepalive:true,
+        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,
+                 'Content-Type':'application/json','Prefer':'return=minimal'},
+        body: JSON.stringify(body)}).catch(function(){});
+    }catch(e){}
+    try{ localStorage.setItem(KEY,'1'); }catch(e){}
+    document.getElementById('kq-ask').style.display = 'none';
+    document.getElementById('kq-done').style.display = 'block';
+    document.getElementById('kq-code').textContent = CODE;
+  }
+
+  go.addEventListener('click', send);
+  document.getElementById('kq-x').addEventListener('click', close);
+  document.getElementById('kq-skip').addEventListener('click', close);
+  document.getElementById('kq-veil').addEventListener('click', close);
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && wrap.classList.contains('on')) close();
+  });
+  document.getElementById('kq-go2').addEventListener('click', function(){
+    close();
+    var p = document.getElementById('pricing');
+    if(p) p.scrollIntoView({behavior:'smooth'});
+  });
+})();
+</script>
+
 </body>
 </html>
