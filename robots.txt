@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# The OAuth landing page has nothing to index and shows up as a thin page.
+Disallow: /callback.html
+
+Sitemap: https://klipr.shop/sitemap.xml
