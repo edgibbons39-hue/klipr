@@ -1,10 +1,10 @@
 {
-  "version": "2.17",
-  "notes": "Fix a word Whisper got wrong. The clip editor now shows the transcript so you can correct a name or a bit of slang and re-render without retranscribing. Also: when the Microsoft Visual C++ runtime is missing, Klipr now says so and links the installer instead of showing a Python traceback.",
+  "version": "2.19",
+  "notes": "Fix a word Whisper got wrong. The subtitle editor added in 2.17 could not read transcripts in the installed app. Also: a Get transcript button, the editor side panel no longer cuts off its text, and a Show in Folder button on every clip.",
   "released": "2026-09-28",
-  "installer_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.17/Klipr_Setup.exe",
+  "installer_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.19/Klipr_Setup.exe",
   "kind": "patch",
-  "patch_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.17/klipr_patch_2.17.zip",
-  "patch_sha256": "a4e4da9312e064b00b5ad1484276560e491e8918f8c725478e8b5e6a95947a6a",
-  "installer_sha256": "1a786125cf0cbf852a817918c6c7355441585c8fc3bd67b77a96c1e19a342330"
+  "patch_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.19/klipr_patch_2.19.zip",
+  "patch_sha256": "e111295e453509b2039d92a521b42fac1f799c18b78f3fe1f29e61d35b4fccbf",
+  "installer_sha256": "a8f42d9adb669837e7e3f607ccca2262ca3b42c3bdd079fc2fe6c5fb0b1e3017"
 }
