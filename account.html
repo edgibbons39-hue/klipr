@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Your Klipr account</title>
+<meta name="description" content="Sign in to see your Klipr licence key, plan, renewal date and the PCs it's running on." />
+<!-- Personal page: nothing here should be in search results. -->
+<meta name="robots" content="noindex, nofollow" />
+<link rel="icon" href="kliprlogo.png" />
+<link rel="canonical" href="https://klipr.shop/account.html" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg:#09090f;--bg-1:#101018;--bg-2:#16161f;--bg-3:#1e1e2a;
+  --border:#262634;--border-lit:#38384d;
+  --violet:#a855f7;--pink:#ec4899;
+  --grad:linear-gradient(135deg,#a855f7 0%,#ec4899 100%);
+  --grad-soft:linear-gradient(135deg,rgba(168,85,247,.16) 0%,rgba(236,72,153,.16) 100%);
+  --text:#f5f4f8;--muted:#a8a2b8;--faint:#6f6982;
+  --ok:#34d399;--warn:#fbbf24;--bad:#f87171;
+  --display:'Outfit',system-ui,sans-serif;--body:'Inter',system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --r:14px;--r-lg:22px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:15px;line-height:1.55;min-height:100vh;
+  background-image:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(168,85,247,.14),transparent 70%)}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px}
+
+nav{border-bottom:1px solid var(--border);background:rgba(9,9,15,.72);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);position:sticky;top:0;z-index:10}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:64px;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:800;font-size:19px;letter-spacing:-.02em}
+.brand img{width:28px;height:28px}
+.nav-link{color:var(--muted);font-size:14px;padding:8px 10px;border-radius:9px}
+.nav-link:hover{color:var(--text);background:rgba(255,255,255,.04)}
+
+main{padding:48px 0 80px}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(28px,6vw,38px);letter-spacing:-.03em;line-height:1.1;margin-bottom:10px}
+.lead{color:var(--muted);font-size:16px;margin-bottom:28px}
+
+.card{background:var(--bg-1);border:1px solid var(--border);border-radius:var(--r-lg);padding:24px}
+.card + .card{margin-top:16px}
+label.lbl{display:block;font-size:13px;font-weight:600;color:var(--muted);margin-bottom:8px}
+input[type=email]{width:100%;background:var(--bg-2);border:1px solid var(--border);border-radius:11px;padding:13px 14px;color:var(--text);font:inherit;font-size:16px}
+input[type=email]:focus{outline:none;border-color:var(--violet)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:600;font-size:15px;padding:12px 20px;border-radius:11px;border:1px solid transparent;min-height:44px;transition:transform .15s,opacity .15s}
+.btn:active{transform:scale(.98)}
+.btn[disabled]{opacity:.5;cursor:default}
+.btn-primary{background:var(--grad);color:#fff;box-shadow:0 6px 24px -8px rgba(168,85,247,.7)}
+.btn-ghost{background:rgba(255,255,255,.04);border-color:var(--border);color:var(--text)}
+.btn-ghost:hover{border-color:var(--border-lit)}
+.btn-sm{padding:7px 12px;min-height:34px;font-size:13px;border-radius:9px}
+.btn-block{width:100%;margin-top:14px}
+.note{font-size:13px;color:var(--faint);margin-top:12px}
+.err{color:var(--bad);font-size:14px;margin-top:12px;min-height:1em}
+
+.center{text-align:center}
+.big-icon{font-size:40px;margin-bottom:8px}
+.spinner{width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--violet);border-radius:50%;animation:spin .8s linear infinite;margin:32px auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.who{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:20px;color:var(--muted);font-size:14px}
+.who b{color:var(--text);font-weight:600;word-break:break-all}
+
+.lic-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.plan{font-family:var(--display);font-weight:800;font-size:12px;letter-spacing:.08em;padding:5px 10px;border-radius:999px;text-transform:uppercase}
+.plan.pro{background:var(--grad);color:#fff}
+.plan.starter{background:var(--bg-3);color:var(--muted);border:1px solid var(--border-lit)}
+.pill{font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;border:1px solid}
+.pill.ok{color:var(--ok);border-color:rgba(52,211,153,.35);background:rgba(52,211,153,.08)}
+.pill.warn{color:var(--warn);border-color:rgba(251,191,36,.35);background:rgba(251,191,36,.08)}
+.pill.bad{color:var(--bad);border-color:rgba(248,113,113,.35);background:rgba(248,113,113,.08)}
+.when{color:var(--muted);font-size:14px;margin-bottom:18px}
+
+.sec{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin:18px 0 8px}
+.keybox{display:flex;align-items:center;gap:8px;background:var(--bg-2);border:1px solid var(--border);border-radius:11px;padding:10px 10px 10px 14px}
+.keybox code{flex:1;font-family:var(--mono);font-size:13.5px;letter-spacing:.02em;word-break:break-all;color:var(--text)}
+
+.pcs{list-style:none;border:1px solid var(--border);border-radius:11px;overflow:hidden}
+.pcs li{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 14px;font-size:14px}
+.pcs li + li{border-top:1px solid var(--border)}
+.pc-name{font-weight:600;white-space:nowrap}
+.pc-meta{color:var(--muted);font-size:13px;text-align:right}
+.tag{font-size:11.5px;font-weight:600;padding:2px 7px;border-radius:6px;margin-left:6px;white-space:nowrap}
+.tag.ok{color:var(--ok);background:rgba(52,211,153,.1)}
+.tag.warn{color:var(--warn);background:rgba(251,191,36,.1)}
+.tag.bad{color:var(--bad);background:rgba(248,113,113,.1)}
+.empty{color:var(--faint);font-size:14px;padding:12px 14px;border:1px dashed var(--border);border-radius:11px}
+
+.acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.acts .btn{flex:1 1 180px}
+.help{margin-top:28px;color:var(--faint);font-size:13px;text-align:center}
+.help a{color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+@media (max-width:520px){.pcs li{flex-direction:column;align-items:flex-start;gap:3px}.pc-meta{text-align:left}}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap nav-in">
+    <a href="/" class="brand"><img src="kliprlogo.png" alt="" /> Klipr</a>
+    <a href="/" class="nav-link">← Back to klipr.shop</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- Signed out -->
+  <section id="v-signin" hidden>
+    <h1>Your Klipr account</h1>
+    <p class="lead">See your licence key, your plan, when it renews, and the PCs it's running on.</p>
+    <form class="card" id="signin-form" novalidate>
+      <label class="lbl" for="email">Email</label>
+      <input type="email" id="email" autocomplete="email" placeholder="you@example.com" required />
+      <button class="btn btn-primary btn-block" id="send-btn" type="submit">Email me a sign-in link</button>
+      <p class="err" id="signin-err" role="alert"></p>
+      <p class="note">Use the email you bought Klipr with. No password — we'll send you a link.</p>
+    </form>
+  </section>
+
+  <!-- Link sent -->
+  <section id="v-sent" hidden>
+    <div class="card center">
+      <div class="big-icon">📬</div>
+      <h1 style="font-size:28px">Check your email</h1>
+      <p class="lead" style="margin-bottom:6px">We sent a sign-in link to <b id="sent-to"></b>.</p>
+      <p class="note">Open it and you'll land back here, signed in. Can't see it? Check spam.</p>
+      <button class="btn btn-ghost btn-block" id="resend-btn">Send it again</button>
+      <p class="err" id="sent-err" role="alert"></p>
+      <p class="note"><a href="#" id="change-email" style="text-decoration:underline">Use a different email</a></p>
+    </div>
+  </section>
+
+  <!-- Loading -->
+  <section id="v-loading" hidden>
+    <div class="spinner" aria-label="Loading"></div>
+  </section>
+
+  <!-- Signed in -->
+  <section id="v-dash" hidden>
+    <h1>Your Klipr account</h1>
+    <div class="who">
+      <span>Signed in as <b id="who-email"></b></span>
+      <button class="btn btn-ghost btn-sm" id="signout-btn">Sign out</button>
+    </div>
+    <div id="licenses"></div>
+    <div class="acts">
+      <a class="btn btn-primary" href="https://github.com/edgibbons39-hue/klipr/releases/latest/download/Klipr_Setup.exe">Download Klipr</a>
+      <a class="btn btn-ghost" href="https://app.gumroad.com/library" target="_blank" rel="noopener">Manage billing</a>
+    </div>
+    <p class="help">Card changes and cancelling are handled by Gumroad. Stuck? <a href="https://discord.gg/YJZJGAzRTH" target="_blank" rel="noopener">Ask in the Discord</a>.</p>
+  </section>
+
+  <!-- Signed in, but no purchase on that email -->
+  <section id="v-none" hidden>
+    <div class="card center">
+      <div class="big-icon">🔎</div>
+      <h1 style="font-size:28px">No Klipr purchase found</h1>
+      <p class="lead" style="margin-bottom:6px">We couldn't find a purchase for <b id="none-email"></b>.</p>
+      <p class="note">If you bought Klipr with a different email, sign out and use that one.</p>
+      <div class="acts" style="justify-content:center">
+        <button class="btn btn-ghost" id="none-signout">Sign out</button>
+        <a class="btn btn-primary" href="https://klipr.gumroad.com/l/klipr" target="_blank" rel="noopener">Get Klipr</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Something went wrong -->
+  <section id="v-error" hidden>
+    <div class="card center">
+      <div class="big-icon">⚠️</div>
+      <h1 style="font-size:26px">Something went wrong</h1>
+      <p class="lead" id="error-msg" style="margin-bottom:0"></p>
+      <div class="acts" style="justify-content:center">
+        <button class="btn btn-primary" id="retry-btn">Try again</button>
+        <button class="btn btn-ghost" id="error-signout">Sign out</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+(function(){
+  // Public values, safe to ship: the publishable key only permits what the
+  // database's row-level security allows, and the dashboard data comes from
+  // the licence Worker, which checks who is signed in before answering.
+  var SB = 'https://kcmypumbsdmqsuaacxdp.supabase.co';
+  var SB_KEY = 'sb_publishable_1NyOJ8dhBpDrcgwY5bzSMA_OhmIoUyi';
+  var API = 'https://klipr-tiktok-oauth.edgibbons39.workers.dev/account';
+  var STORE = 'klipr_session_v1';
+
+  var views = ['signin','sent','loading','dash','none','error'];
+  function show(v){ views.forEach(function(n){ $('v-'+n).hidden = (n !== v); }); window.scrollTo(0,0); }
+  function $(id){ return document.getElementById(id); }
+  function el(tag, cls, text){ var e=document.createElement(tag); if(cls) e.className=cls; if(text!=null) e.textContent=text; return e; }
+
+  // ── session storage ────────────────────────────────────────────────────
+  function load(){ try{ return JSON.parse(localStorage.getItem(STORE)||'null'); }catch(e){ return null; } }
+  function save(s){ try{ localStorage.setItem(STORE, JSON.stringify(s)); }catch(e){} }
+  function clear(){ try{ localStorage.removeItem(STORE); }catch(e){} }
+
+  // ── returning from the emailed link ─────────────────────────────────────
+  // Supabase puts the session in the URL fragment. Read it, store it, and wipe
+  // it from the address bar straight away so the token isn't left in history.
+  function readFragment(){
+    if (!location.hash || location.hash.length < 2) return null;
+    var p = new URLSearchParams(location.hash.slice(1));
+    history.replaceState(null, '', location.pathname + location.search);
+    if (p.get('error') || p.get('error_description')) {
+      return { error: (p.get('error_description') || p.get('error') || '').replace(/\+/g,' ') };
+    }
+    var at = p.get('access_token');
+    if (!at) return null;
+    var exp = parseInt(p.get('expires_at') || '0', 10) ||
+              Math.floor(Date.now()/1000) + parseInt(p.get('expires_in') || '3600', 10);
+    return { session: { access_token: at, refresh_token: p.get('refresh_token'), expires_at: exp } };
+  }
+
+  async function refresh(s){
+    if (!s || !s.refresh_token) return null;
+    try {
+      var r = await fetch(SB + '/auth/v1/token?grant_type=refresh_token', {
+        method:'POST', headers:{ apikey:SB_KEY, 'Content-Type':'application/json' },
+        body: JSON.stringify({ refresh_token: s.refresh_token })
+      });
+      if (!r.ok) return null;
+      var d = await r.json();
+      var ns = { access_token:d.access_token, refresh_token:d.refresh_token,
+                 expires_at: d.expires_at || Math.floor(Date.now()/1000) + (d.expires_in||3600) };
+      save(ns); return ns;
+    } catch(e){ return null; }
+  }
+
+  async function validSession(){
+    var s = load();
+    if (!s || !s.access_token) return null;
+    if (s.expires_at && s.expires_at - 60 < Date.now()/1000) s = await refresh(s);
+    return s;
+  }
+
+  // ── sign in ─────────────────────────────────────────────────────────────
+  var lastEmail = '';
+  async function sendLink(email, errEl, btn){
+    errEl.textContent = '';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { errEl.textContent = 'Enter a valid email address.'; return false; }
+    btn.disabled = true; var label = btn.textContent; btn.textContent = 'Sending…';
+    try {
+      var r = await fetch(SB + '/auth/v1/otp?redirect_to=' + encodeURIComponent(location.origin + '/account.html'), {
+        method:'POST', headers:{ apikey:SB_KEY, 'Content-Type':'application/json' },
+        body: JSON.stringify({ email: email, create_user: true })
+      });
+      if (r.status === 429) { errEl.textContent = 'Too many tries — wait a minute and try again.'; return false; }
+      if (!r.ok) { errEl.textContent = "Couldn't send the email. Try again in a moment."; return false; }
+      return true;
+    } catch(e){
+      errEl.textContent = "Couldn't reach the server. Check your connection."; return false;
+    } finally { btn.disabled = false; btn.textContent = label; }
+  }
+
+  $('signin-form').addEventListener('submit', async function(ev){
+    ev.preventDefault();
+    var email = $('email').value.trim().toLowerCase();
+    if (await sendLink(email, $('signin-err'), $('send-btn'))) {
+      lastEmail = email; $('sent-to').textContent = email; show('sent');
+    }
+  });
+  $('resend-btn').addEventListener('click', async function(){
+    var b = this;
+    if (await sendLink(lastEmail, $('sent-err'), b)) {
+      $('sent-err').style.color = 'var(--ok)'; $('sent-err').textContent = 'Sent again.';
+      b.disabled = true; setTimeout(function(){ b.disabled = false; $('sent-err').textContent=''; $('sent-err').style.color=''; }, 30000);
+    }
+  });
+  $('change-email').addEventListener('click', function(e){ e.preventDefault(); show('signin'); });
+
+  // ── sign out ────────────────────────────────────────────────────────────
+  async function signOut(){
+    var s = load(); clear();
+    if (s && s.access_token) {
+      try { await fetch(SB + '/auth/v1/logout', { method:'POST', headers:{ apikey:SB_KEY, Authorization:'Bearer '+s.access_token } }); } catch(e){}
+    }
+    $('email').value = ''; show('signin');
+  }
+  ['signout-btn','none-signout','error-signout'].forEach(function(id){ $(id).addEventListener('click', signOut); });
+  $('retry-btn').addEventListener('click', function(){ start(); });
+
+  // ── dashboard ───────────────────────────────────────────────────────────
+  async function fetchAccount(s, retried){
+    var r = await fetch(API, { method:'POST', headers:{ Authorization:'Bearer '+s.access_token, 'Content-Type':'application/json' }, body:'{}' });
+    if (r.status === 401 && !retried) {
+      var ns = await refresh(s);
+      if (ns) return fetchAccount(ns, true);
+    }
+    return r;
+  }
+
+  function fmtDate(iso){
+    if (!iso) return '';
+    var d = new Date(iso); if (isNaN(d)) return '';
+    return d.toLocaleDateString(undefined, { day:'numeric', month:'long', year:'numeric' });
+  }
+  function ago(iso){
+    var s = (Date.now() - new Date(iso).getTime())/1000;
+    if (!(s >= 0)) return '';
+    if (s < 90) return 'just now';
+    var m = s/60, h = m/60, d = h/24;
+    if (m < 60) return Math.round(m) + ' min ago';
+    if (h < 24) return Math.round(h) + (Math.round(h)===1?' hour ago':' hours ago');
+    if (d < 30) return Math.round(d) + (Math.round(d)===1?' day ago':' days ago');
+    return fmtDate(iso);
+  }
+  function older(a, b){  // true when version a is older than b
+    if (!a || !b) return false;
+    var x = String(a).split('.').map(Number), y = String(b).split('.').map(Number);
+    for (var i=0;i<Math.max(x.length,y.length);i++){ var p=x[i]||0,q=y[i]||0; if(p!==q) return p<q; }
+    return false;
+  }
+  function mask(k){ var p = k.split('-'); return p.length > 2 ? p[0] + '-' + p.slice(1,-1).map(function(){return '••••';}).join('-') + '-' + p[p.length-1] : '••••••••'; }
+
+  function statusPill(l){
+    var map = {
+      active:['ok','Active'], cancelled:['warn','Cancelled'],
+      payment_failed:['bad','Payment failed'], ended:['bad','Ended']
+    };
+    var s = map[l.status] || map.active;
+    return el('span', 'pill ' + s[0], s[1]);
+  }
+  function whenLine(l){
+    if (l.status === 'active' && l.renews_at) return 'Renews on ' + fmtDate(l.renews_at) + '.';
+    if (l.status === 'cancelled' && l.ends_at) return "You've cancelled — Klipr keeps working until " + fmtDate(l.ends_at) + '.';
+    if (l.status === 'payment_failed') return "Your last payment didn't go through. Update your card under Manage billing to keep Klipr running.";
+    if (l.status === 'ended') return 'This plan ended' + (l.ends_at ? ' on ' + fmtDate(l.ends_at) : '') + '. Resubscribe to use Klipr again.';
+    return l.purchased_at ? 'Bought on ' + fmtDate(l.purchased_at) + '.' : '';
+  }
+
+  function renderLicense(l, latest){
+    var c = el('div', 'card');
+    var head = el('div', 'lic-head');
+    head.appendChild(el('span', 'plan ' + (l.plan === 'pro' ? 'pro' : 'starter'), l.plan === 'pro' ? 'Pro' : 'Starter'));
+    head.appendChild(statusPill(l));
+    c.appendChild(head);
+    c.appendChild(el('p', 'when', whenLine(l)));
+
+    c.appendChild(el('div', 'sec', 'Licence key'));
+    var kb = el('div', 'keybox');
+    var code = el('code', null, mask(l.key)); kb.appendChild(code);
+    var shown = false;
+    var showBtn = el('button', 'btn btn-ghost btn-sm', 'Show');
+    showBtn.addEventListener('click', function(){ shown = !shown; code.textContent = shown ? l.key : mask(l.key); showBtn.textContent = shown ? 'Hide' : 'Show'; });
+    var copyBtn = el('button', 'btn btn-ghost btn-sm', 'Copy');
+    copyBtn.addEventListener('click', async function(){
+      try { await navigator.clipboard.writeText(l.key); copyBtn.textContent = 'Copied'; }
+      catch(e){ code.textContent = l.key; shown = true; showBtn.textContent = 'Hide'; copyBtn.textContent = 'Select it'; }
+      setTimeout(function(){ copyBtn.textContent = 'Copy'; }, 1800);
+    });
+    kb.appendChild(showBtn); kb.appendChild(copyBtn);
+    c.appendChild(kb);
+
+    c.appendChild(el('div', 'sec', 'Your PCs'));
+    if (!l.machines || !l.machines.length) {
+      c.appendChild(el('div', 'empty', "Not activated on a PC yet. Download Klipr and paste your key in to get started."));
+    } else {
+      var ul = el('ul', 'pcs');
+      l.machines.forEach(function(m, i){
+        var li = el('li');
+        var left = el('div');
+        var name = el('span', 'pc-name', 'PC ' + (m.id_hint || '?'));
+        left.appendChild(name);
+        if (m.blocked) left.appendChild(el('span', 'tag bad', 'Blocked'));
+        else if (m.version && latest && older(m.version, latest)) left.appendChild(el('span', 'tag warn', 'Update available'));
+        else if (m.version && latest) left.appendChild(el('span', 'tag ok', 'Up to date'));
+        var right = el('div', 'pc-meta', (m.version ? 'Klipr ' + m.version + ' · ' : '') + 'last used ' + ago(m.last_seen));
+        li.appendChild(left); li.appendChild(right);
+        ul.appendChild(li);
+      });
+      c.appendChild(ul);
+      if (l.machines.length > 1) c.appendChild(el('p', 'note', 'Your key has been used on more than one PC. If one of these isn’t yours, get in touch.'));
+    }
+    return c;
+  }
+
+  async function start(){
+    var frag = readFragment();
+    if (frag && frag.error) {
+      show('signin');
+      $('signin-err').textContent = /expired|invalid/i.test(frag.error)
+        ? 'That sign-in link has expired or was already used. Send yourself a new one.'
+        : 'Sign-in failed: ' + frag.error;
+      return;
+    }
+    if (frag && frag.session) save(frag.session);
+
+    var s = await validSession();
+    if (!s) { show('signin'); return; }
+    show('loading');
+    var r;
+    try { r = await fetchAccount(s); }
+    catch(e){ $('error-msg').textContent = "Couldn't reach Klipr's server. Check your connection and try again."; show('error'); return; }
+
+    if (r.status === 401) { clear(); show('signin'); $('signin-err').textContent = 'Your sign-in expired. Send yourself a new link.'; return; }
+    if (!r.ok) {
+      var why = r.status === 503 ? "Accounts aren't switched on yet. Try again later."
+              : r.status === 429 ? 'Too many requests — wait a minute and try again.'
+              : 'The account service had a problem. Try again in a minute.';
+      $('error-msg').textContent = why; show('error'); return;
+    }
+    var d = await r.json();
+    if (!d.licenses || !d.licenses.length) { $('none-email').textContent = d.email || ''; show('none'); return; }
+    $('who-email').textContent = d.email || '';
+    var box = $('licenses'); box.textContent = '';
+    d.licenses.forEach(function(l){ box.appendChild(renderLicense(l, d.latest_version)); });
+    show('dash');
+  }
+
+  start();
+})();
+</script>
+</body>
+</html>
