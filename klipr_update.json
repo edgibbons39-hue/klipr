@@ -1,10 +1,10 @@
 {
-  "version": "2.19",
-  "notes": "Fix a word Whisper got wrong. The subtitle editor added in 2.17 could not read transcripts in the installed app. Also: a Get transcript button, the editor side panel no longer cuts off its text, and a Show in Folder button on every clip.",
-  "released": "2026-09-28",
-  "installer_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.19/Klipr_Setup.exe",
+  "version": "2.20",
+  "notes": "Klipr Pro free trials, and a plan re-check while Klipr is running.\n\nKlipr now accepts licence keys from the new Klipr Pro free trial as well as the main product.\n\nIt also re-checks your plan every 30 minutes instead of only at startup. If a plan has ended \u2014 including a free trial that finished without a payment going through \u2014 the bot stops and Klipr tells you why, instead of running on until the next restart. Being offline never stops it: only a definite answer from Gumroad does.",
+  "released": "2026-09-29",
+  "installer_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.20/Klipr_Setup.exe",
   "kind": "patch",
-  "patch_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.19/klipr_patch_2.19.zip",
-  "patch_sha256": "e111295e453509b2039d92a521b42fac1f799c18b78f3fe1f29e61d35b4fccbf",
-  "installer_sha256": "a8f42d9adb669837e7e3f607ccca2262ca3b42c3bdd079fc2fe6c5fb0b1e3017"
+  "patch_url": "https://github.com/edgibbons39-hue/klipr/releases/download/v2.20/klipr_patch_2.20.zip",
+  "patch_sha256": "e1ccc08a3b1da3a834251b2fff98d38f004608db08aa0e8aa5580b139c8b4e39",
+  "installer_sha256": "b4ed15368c38e0017d08bbf3e6b3dd066261f4042400ad59fa05fec43c124a6c"
 }
