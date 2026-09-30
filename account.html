@@ -327,7 +327,7 @@ input[type=email]:focus{outline:none;border-color:var(--violet)}
 
   function statusPill(l){
     var map = {
-      active:['ok','Active'], cancelled:['warn','Cancelled'],
+      active:['ok','Active'], trial:['ok','Free trial'], cancelled:['warn','Cancelled'],
       payment_failed:['bad','Payment failed'], ended:['bad','Ended']
     };
     var s = map[l.status] || map.active;
@@ -335,6 +335,7 @@ input[type=email]:focus{outline:none;border-color:var(--violet)}
   }
   function whenLine(l){
     if (l.status === 'active' && l.renews_at) return 'Renews on ' + fmtDate(l.renews_at) + '.';
+    if (l.status === 'trial' && l.renews_at) return 'Your free trial ends on ' + fmtDate(l.renews_at) + ". You'll be charged then unless you cancel under Manage billing.";
     if (l.status === 'cancelled' && l.ends_at) return "You've cancelled — Klipr keeps working until " + fmtDate(l.ends_at) + '.';
     if (l.status === 'payment_failed') return "Your last payment didn't go through. Update your card under Manage billing to keep Klipr running.";
     if (l.status === 'ended') return 'This plan ended' + (l.ends_at ? ' on ' + fmtDate(l.ends_at) : '') + '. Resubscribe to use Klipr again.';
